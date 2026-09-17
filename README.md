@@ -1,6 +1,8 @@
 # AI-Powered Interview Preparation System with Personalized AI Tutor
 Department of Computer Science & Engineering (Artificial Intelligence & Machine Learning)
+
 Vasireddy Venkatadri Institute of Technology (VVIT)
+
 Major Project | Batch ID: AIML-C-14
 
 # Abstract
