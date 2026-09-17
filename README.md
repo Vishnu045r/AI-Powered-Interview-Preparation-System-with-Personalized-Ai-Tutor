@@ -13,26 +13,27 @@ The system uses Artificial Intelligence, Large Language Models, Natural Language
 
 # Detailed Plan of Action
 The project workflow is divided into five phases.
+
 Phase 1: Resume Analysis
 Upload and process the candidate's resume.
 Extract candidate details, skills, projects, experience, and role.
+
 Phase 2: Mock Interview
 Generate interview questions based on the candidate's resume and skills.
 Conduct a personalized mock interview and collect the candidate's responses.
+
 Phase 3: Performance Analysis
 Analyze the candidate's interview responses.
 Identify strengths and skills that need improvement.
+
 Phase 4: Personalized AI Tutor
 Analyze the identified skill gaps.
 Provide topic-wise guidance and generate a personalized learning roadmap.
+
 Phase 5: Learning Resources
 Identify the skills that need improvement.
 Recommend suitable learning websites and resources for developing those skills.
 
-# System Workflow
-Resume Upload
-Resume Analysis
-Skill and Project Extraction
 Mock Interview
 Performance Analysis
 Skill Gap Identification
