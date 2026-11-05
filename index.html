@@ -1,0 +1,2307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
+<title>InterviewIQ — AI Interview & Career Intelligence</title>
+<link rel="manifest" href="/manifest.json" />
+<link rel="icon" href="/icon.svg" />
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@500;600;700&family=Inter:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --ink:#0B1118;
+    --surface:#131D2A;
+    --surface-2:#1A2738;
+    --surface-3:#24364D;
+    --border:#26374D;
+    --border-light:#344B66;
+    --text:#EEF4FA;
+    --muted:#94A6BC;
+    --amber:#F5BA42;
+    --amber-dim:#8A641E;
+    --teal:#3ED598;
+    --teal-dim:#164D38;
+    --blue:#3B82F6;
+    --purple:#A855F7;
+    --red:#F43F5E;
+    --radius:14px;
+  }
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent;}
+  body{margin:0;background:var(--ink);color:var(--text);font-family:'Inter',sans-serif;min-height:100vh;display:flex;flex-direction:column;overscroll-behavior-y:none;}
+  h1,h2,h3,h4,.display{font-family:'Space Grotesk',sans-serif;letter-spacing:-0.01em;}
+  .mono{font-family:'JetBrains Mono',monospace;}
+  a{color:inherit;text-decoration:none;}
+
+  /* ---------- Top Navigation Bar ---------- */
+  .navbar{
+    position:sticky;top:0;z-index:100;background:rgba(19, 29, 42, 0.94);
+    backdrop-filter:blur(12px);border-bottom:1px solid var(--border);
+    padding:0 28px;height:68px;display:flex;align-items:center;justify-content:space-between;
+  }
+  .brand-group{display:flex;align-items:center;gap:12px;cursor:pointer;}
+  .brand-mark{
+    width:36px;height:36px;border-radius:10px;background:linear-gradient(135deg,var(--amber),#E08E1B);
+    display:flex;align-items:center;justify-content:center;font-weight:800;color:#120E04;
+    font-family:'Space Grotesk';font-size:17px;box-shadow:0 0 16px rgba(245,186,66,0.25);
+  }
+  .brand-title{font-family:'Space Grotesk';font-weight:700;font-size:18px;letter-spacing:-0.02em;}
+  .brand-tagline{font-size:11px;color:var(--muted);margin-top:-3px;}
+
+  .nav-links{display:flex;align-items:center;gap:6px;}
+  .nav-item{
+    display:flex;align-items:center;gap:8px;padding:9px 15px;border-radius:9px;
+    color:var(--muted);cursor:pointer;font-size:13.5px;font-weight:500;border:1px solid transparent;
+    transition:all .18s ease;
+  }
+  .nav-item:hover{background:var(--surface-2);color:var(--text);}
+  .nav-item.active{background:var(--surface-2);color:var(--amber);border-color:var(--border-light);font-weight:600;}
+  .nav-icon{font-size:14px;}
+
+  .nav-right{display:flex;align-items:center;gap:14px;}
+  .user-badge{
+    display:flex;align-items:center;gap:8px;padding:6px 12px;background:var(--surface-2);
+    border:1px solid var(--border);border-radius:999px;font-size:12.5px;color:var(--text);
+  }
+  .user-dot{width:7px;height:7px;border-radius:50%;background:var(--teal);}
+  .logout-btn{
+    background:none;border:1px solid var(--border);color:var(--muted);padding:6px 12px;
+    border-radius:8px;font-size:12px;cursor:pointer;font-weight:500;transition:all .15s;
+  }
+  .logout-btn:hover{background:#3A1C22;border-color:var(--red);color:#FFCAD0;}
+
+  /* ---------- App Layout ---------- */
+  #main-content{flex:1;max-width:1200px;width:100%;margin:0 auto;padding:32px 24px 60px;}
+  .view{display:none;}
+  .view.active{display:block;animation:fadeIn .25s ease-out;}
+  @keyframes fadeIn{from{opacity:0;transform:translateY(6px)}to{opacity:1;transform:none}}
+
+  .page-header{margin-bottom:26px;}
+  .page-title{font-size:28px;font-weight:700;margin:0 0 6px 0;}
+  .page-sub{color:var(--muted);font-size:14.5px;margin:0;line-height:1.5;}
+
+  /* ---------- Auth Screen ---------- */
+  #auth-screen{min-height:100vh;display:flex;align-items:center;justify-content:center;background:radial-gradient(circle at 20% 20%, #162436 0%, var(--ink) 65%);padding:20px;}
+  .auth-card{width:100%;max-width:400px;background:var(--surface);border:1px solid var(--border);border-radius:18px;padding:36px;box-shadow:0 20px 40px rgba(0,0,0,0.4);}
+  .auth-brand{display:flex;align-items:center;gap:10px;margin-bottom:20px;}
+  .auth-toggle{display:flex;gap:6px;margin-bottom:22px;background:var(--surface-2);padding:4px;border-radius:10px;}
+  .auth-toggle button{flex:1;padding:9px;border:none;border-radius:7px;background:transparent;color:var(--muted);font-weight:600;font-size:13px;cursor:pointer;transition:all .15s;}
+  .auth-toggle button.active{background:var(--amber);color:#120E04;}
+
+  /* ---------- Form Controls ---------- */
+  label{display:block;font-size:11.5px;color:var(--muted);margin:14px 0 6px;font-weight:600;text-transform:uppercase;letter-spacing:.05em;}
+  input[type=text],input[type=email],input[type=password],input[type=file],select,textarea{
+    width:100%;padding:11px 13px;border-radius:9px;border:1px solid var(--border);
+    background:var(--surface-2);color:var(--text);font-size:14px;font-family:inherit;transition:border-color .15s;
+  }
+  input:focus,select:focus,textarea:focus{outline:none;border-color:var(--amber);box-shadow:0 0 0 2px rgba(245,186,66,0.15);}
+  textarea{min-height:110px;resize:vertical;}
+  .btn{
+    display:inline-flex;align-items:center;justify-content:center;gap:8px;
+    padding:11px 20px;border-radius:9px;border:none;font-weight:600;font-size:14px;cursor:pointer;
+    background:var(--amber);color:#120E04;font-family:'Space Grotesk',sans-serif;transition:all .15s ease;
+  }
+  .btn:hover{background:#F7C75F;transform:translateY(-1px);}
+  .btn.secondary{background:var(--surface-2);color:var(--text);border:1px solid var(--border);}
+  .btn.secondary:hover{background:var(--surface-3);border-color:var(--border-light);}
+  .btn.teal{background:var(--teal);color:#0A241A;}
+  .btn.teal:hover{background:#5CE0AC;}
+  .btn.block{width:100%;}
+  .btn:disabled{opacity:.5;cursor:not-allowed;transform:none;}
+  .error-box{background:#3A1C22;border:1px solid var(--red);color:#FFCAD0;padding:12px 14px;border-radius:9px;font-size:13px;margin-top:14px;}
+  .success-box{background:#123327;border:1px solid var(--teal);color:#CFF5E4;padding:12px 14px;border-radius:9px;font-size:13px;margin-top:14px;}
+  .hint{font-size:12px;color:var(--muted);margin-top:6px;line-height:1.4;}
+
+  /* ---------- Cards & Layout ---------- */
+  .grid{display:grid;gap:20px;}
+  .grid-3{grid-template-columns:repeat(3,1fr);}
+  .grid-2{grid-template-columns:repeat(2,1fr);}
+  .grid-split{grid-template-columns:1.8fr 1.2fr;}
+  .card{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;}
+  .badge{display:inline-flex;align-items:center;gap:4px;padding:3px 10px;border-radius:999px;font-size:12px;font-weight:600;background:var(--surface-2);border:1px solid var(--border);color:var(--muted);}
+  .badge.green{background:var(--teal-dim);border-color:rgba(62,213,152,0.3);color:var(--teal);}
+  .badge.amber{background:#3D2C10;border-color:rgba(245,186,66,0.3);color:var(--amber);}
+  .badge.red{background:#3A1C22;border-color:rgba(244,63,94,0.3);color:var(--red);}
+
+  /* ---------- Hero & Dashboard ---------- */
+  .hero-banner{
+    background:linear-gradient(135deg,#16263A 0%,#101A26 100%);border:1px solid var(--border);
+    border-radius:20px;padding:40px 36px;margin-bottom:26px;position:relative;overflow:hidden;
+  }
+  .hero-banner h1{font-size:34px;margin:0 0 10px;}
+  .hero-banner h1 .accent{color:var(--amber);}
+  .hero-banner p{color:var(--muted);font-size:15px;max-width:620px;margin:0 0 24px;line-height:1.6;}
+  .hero-actions{display:flex;gap:14px;margin-bottom:30px;}
+  .feature-grid{display:grid;grid-template-columns:repeat(2,1fr);gap:16px;}
+  .feature-card{
+    background:var(--surface);border:1px solid var(--border);border-radius:14px;padding:18px;
+    display:flex;align-items:flex-start;gap:14px;transition:border-color .15s;
+  }
+  .feature-card:hover{border-color:var(--border-light);}
+  .feature-icon{width:44px;height:44px;border-radius:10px;background:var(--surface-2);display:flex;align-items:center;justify-content:center;font-size:22px;flex-shrink:0;}
+  .feature-title{font-family:'Space Grotesk';font-weight:600;font-size:15px;margin-bottom:3px;}
+  .feature-desc{font-size:12.5px;color:var(--muted);line-height:1.5;}
+
+  /* ---------- Mode Cards ---------- */
+  .mode-selector{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px;}
+  .mode-card{
+    border:2px solid var(--border);border-radius:12px;padding:16px;background:var(--surface-2);
+    cursor:pointer;transition:all .18s ease;display:flex;flex-direction:column;gap:6px;
+  }
+  .mode-card:hover{border-color:var(--border-light);transform:translateY(-1px);}
+  .mode-card.selected{border-color:var(--amber);background:rgba(245,186,66,0.06);}
+  .mode-card-header{display:flex;align-items:center;justify-content:space-between;}
+  .mode-title{font-family:'Space Grotesk';font-weight:700;font-size:15px;color:var(--text);}
+  .mode-desc{font-size:12px;color:var(--muted);line-height:1.45;}
+
+  /* ---------- Code Editor & LeetCode Split ---------- */
+  .coding-layout{display:grid;grid-template-columns:1.1fr 1.4fr;gap:20px;min-height:560px;}
+  .problem-panel{background:var(--surface);border:1px solid var(--border);border-radius:var(--radius);padding:22px;overflow-y:auto;max-height:680px;}
+  .problem-tag{display:inline-block;font-size:11px;font-weight:700;padding:2px 8px;border-radius:6px;text-transform:uppercase;margin-right:6px;}
+  .problem-tag.easy{background:var(--teal-dim);color:var(--teal);}
+  .problem-tag.medium{background:#3D2C10;color:var(--amber);}
+  .problem-tag.hard{background:#3A1C22;color:var(--red);}
+  .problem-desc{font-size:13.5px;line-height:1.6;color:var(--text);margin:14px 0;}
+  .example-box{background:var(--surface-2);border:1px solid var(--border);border-radius:8px;padding:12px;margin:10px 0;font-size:12.5px;}
+  .example-title{font-weight:600;color:var(--muted);margin-bottom:4px;}
+  
+  .editor-panel{display:flex;flex-direction:column;background:#0C121B;border:1px solid var(--border);border-radius:var(--radius);overflow:hidden;}
+  .editor-topbar{display:flex;align-items:center;justify-content:space-between;padding:10px 16px;background:var(--surface-2);border-bottom:1px solid var(--border);}
+  .editor-textarea{
+    flex:1;background:transparent;color:#E6EDF3;font-family:'JetBrains Mono',monospace;
+    font-size:13.5px;padding:16px;border:none;resize:none;line-height:1.6;min-height:360px;
+  }
+  .editor-textarea:focus{outline:none;}
+  .editor-actions{display:flex;align-items:center;justify-content:space-between;padding:12px 16px;background:var(--surface);border-top:1px solid var(--border);}
+
+  /* ---------- Results & Radial Score ---------- */
+  .result-hero{
+    display:flex;align-items:center;gap:24px;padding:28px;background:linear-gradient(135deg,#1C2B3E,#121C28);
+    border:1px solid var(--border);border-radius:18px;margin-bottom:24px;
+  }
+  .score-ring{
+    width:92px;height:92px;border-radius:50%;flex-shrink:0;display:flex;align-items:center;justify-content:center;
+    background:conic-gradient(var(--amber) calc(var(--pct) * 1%), var(--surface-2) 0);
+  }
+  .score-ring-inner{width:72px;height:72px;border-radius:50%;background:var(--ink);display:flex;align-items:center;justify-content:center;font-family:'Space Grotesk';font-size:22px;font-weight:700;}
+
+  /* ---------- Career Path Recommendation ---------- */
+  .roadmap-phase-card{
+    background:var(--surface-2);border:1px solid var(--border);border-radius:12px;
+    padding:18px;margin-bottom:14px;border-left:4px solid var(--amber);
+  }
+  .roadmap-phase-header{display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;}
+  .roadmap-phase-title{font-family:'Space Grotesk';font-weight:700;font-size:15px;}
+  .roadmap-phase-duration{font-size:12px;color:var(--muted);background:var(--surface-3);padding:2px 8px;border-radius:6px;}
+
+  /* ---------- Live Speech & AI Interviewer Avatar ---------- */
+  .interviewer-stage{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;
+    padding:16px 20px;background:var(--surface-2);border:1px solid var(--border);
+    border-radius:14px;margin-bottom:18px;
+  }
+  .ai-voice-avatar{
+    width:50px;height:50px;border-radius:50%;background:linear-gradient(135deg,var(--amber),#E08E1B);
+    display:flex;align-items:center;justify-content:center;font-size:22px;color:#120E04;
+    font-weight:800;font-family:'Space Grotesk';flex-shrink:0;transition:all .2s;
+  }
+  .ai-voice-avatar.speaking{animation:pulseVoice 1.3s infinite ease-out;}
+  @keyframes pulseVoice{
+    0%{box-shadow:0 0 0 0 rgba(245,186,66,0.6);}
+    70%{box-shadow:0 0 0 16px rgba(245,186,66,0);}
+    100%{box-shadow:0 0 0 0 rgba(245,186,66,0);}
+  }
+  .mic-live-pulse{animation:pulseMic 1.2s infinite ease-out;}
+  @keyframes pulseMic{
+    0%{box-shadow:0 0 0 0 rgba(62,213,152,0.6);}
+    70%{box-shadow:0 0 0 14px rgba(62,213,152,0);}
+    100%{box-shadow:0 0 0 0 rgba(62,213,152,0);}
+  }
+  .dialogue-textarea{
+    font-size:14.5px;line-height:1.6;min-height:130px;
+    background:var(--surface-2);border:1px solid var(--border);border-radius:10px;
+  }
+
+  /* ---------- Tables & General ---------- */
+  table{width:100%;border-collapse:collapse;font-size:13.5px;}
+  th{text-align:left;color:var(--muted);font-weight:600;padding:10px 12px;border-bottom:1px solid var(--border);text-transform:uppercase;font-size:11px;letter-spacing:.04em;}
+  td{padding:12px;border-bottom:1px solid var(--border);}
+  tr:last-child td{border-bottom:none;}
+  .spinner{width:15px;height:15px;border:2px solid rgba(0,0,0,.2);border-top-color:#120E04;border-radius:50%;animation:spin .7s linear infinite;display:inline-block;}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  /* ---------- Mobile app-shell: bottom tab bar ---------- */
+  .mobile-tabbar{
+    display:none;position:fixed;left:0;right:0;bottom:0;z-index:200;
+    background:rgba(19,29,42,0.97);backdrop-filter:blur(16px);-webkit-backdrop-filter:blur(16px);
+    border-top:1px solid var(--border);
+    padding:6px 4px calc(6px + env(safe-area-inset-bottom));
+    justify-content:space-around;align-items:stretch;
+  }
+  .tab-item{
+    display:flex;flex-direction:column;align-items:center;justify-content:center;gap:2px;
+    flex:1;min-width:0;padding:7px 2px;border-radius:12px;color:var(--muted);
+    font-size:10.5px;font-weight:600;line-height:1;transition:color .15s,transform .12s;
+    -webkit-tap-highlight-color:transparent;cursor:pointer;user-select:none;
+  }
+  .tab-item .tab-icon{font-size:20px;line-height:1;transition:transform .18s ease;}
+  .tab-item span.tab-label{white-space:nowrap;overflow:hidden;text-overflow:ellipsis;max-width:100%;}
+  .tab-item.active{color:var(--amber);}
+  .tab-item.active .tab-icon{transform:translateY(-2px) scale(1.1);}
+  .tab-item:active{transform:scale(.92);}
+
+  /* ---------- App-like tactile feedback (all breakpoints) ---------- */
+  .btn:active, .logout-btn:active, .nav-item:active, .mode-card:active, .feature-card:active{transform:scale(.97);}
+  select, input, textarea, button{-webkit-tap-highlight-color:transparent;}
+
+  @media (max-width:860px){
+    html{scroll-behavior:smooth;}
+    .navbar{padding:calc(10px + env(safe-area-inset-top)) 16px 10px;flex-wrap:nowrap;height:auto;gap:8px;}
+    .brand-tagline{display:none;}
+    .nav-links{display:none;}
+    .nav-right{gap:8px;}
+    .user-badge span:not(.user-dot){display:none;}
+    .user-badge{padding:8px;}
+    .logout-btn{padding:9px 10px;font-size:11.5px;}
+
+    #main-content{padding:18px 14px calc(84px + env(safe-area-inset-bottom));}
+    .grid-3,.grid-2,.grid-split,.feature-grid,.coding-layout,.mode-selector{grid-template-columns:1fr;}
+    .grid{gap:14px;}
+
+    .hero-banner{padding:24px 18px;border-radius:16px;}
+    .hero-banner h1{font-size:26px;}
+    .hero-actions{flex-direction:column;gap:10px;}
+    .hero-actions .btn{width:100%;}
+
+    .card{padding:18px;border-radius:14px;}
+    .page-title{font-size:22px;}
+
+    /* Full-width, app-like touch targets */
+    .btn{width:100%;padding:14px 20px;font-size:15px;min-height:48px;}
+    .btn.inline-auto{width:auto;}
+    input[type=text],input[type=email],input[type=password],input[type=file],select,textarea{
+      font-size:16px;padding:13px 14px;
+    }
+    label{margin:16px 0 7px;}
+
+    .editor-actions{flex-direction:column;align-items:stretch;gap:10px;}
+    .editor-actions > div{display:flex;flex-direction:column;gap:10px;width:100%;}
+    .editor-textarea{min-height:280px;font-size:14px;}
+    .problem-panel{max-height:none;}
+
+    .result-hero{flex-direction:column;text-align:center;padding:22px;gap:16px;}
+    .interviewer-stage{flex-direction:column;text-align:center;gap:12px;}
+
+    .mobile-tabbar{display:flex;}
+    .view.active{animation:fadeSlideIn .28s ease-out;}
+  }
+  @keyframes fadeSlideIn{from{opacity:0;transform:translateY(10px)}to{opacity:1;transform:none}}
+
+  /* ===================================================================
+     TECHNICAL MODE ONLY — all rules below are scoped to #view-interview-tech
+     or .tech-only so they cannot affect HR mode or any other view.
+     =================================================================== */
+
+  /* Analysis mode indicator strip */
+  #view-interview-tech .tech-mode-indicator{
+    display:flex;align-items:center;gap:8px;padding:7px 12px;
+    border-radius:8px;font-size:11.5px;font-weight:600;margin-bottom:10px;
+    border:1px solid var(--border);background:var(--surface-2);color:var(--muted);
+  }
+  #view-interview-tech .tech-mode-indicator .dot{
+    width:8px;height:8px;border-radius:50%;flex-shrink:0;
+  }
+  #view-interview-tech .tech-mode-indicator.mode-exec  .dot{background:var(--teal);}
+  #view-interview-tech .tech-mode-indicator.mode-static .dot{background:var(--amber);}
+  #view-interview-tech .tech-mode-indicator.mode-exec  {border-color:var(--teal-dim);color:var(--teal);}
+  #view-interview-tech .tech-mode-indicator.mode-static{border-color:var(--amber-dim);color:var(--amber);}
+
+  /* Dry-run results panel (Test Solution button) */
+  #tech-dryrun-panel{
+    display:none;margin-top:0;border-top:1px solid var(--border);
+    background:var(--surface);overflow:hidden;
+  }
+  #tech-dryrun-panel .dryrun-header{
+    display:flex;align-items:center;justify-content:space-between;
+    padding:10px 14px;cursor:pointer;user-select:none;
+    border-bottom:1px solid var(--border);
+  }
+  #tech-dryrun-panel .dryrun-header:hover{background:var(--surface-2);}
+  #tech-dryrun-inner{padding:14px;max-height:340px;overflow-y:auto;}
+
+  /* Test case grid */
+  .tech-tc-grid{display:flex;flex-direction:column;gap:6px;margin-top:8px;}
+  .tech-tc-row{
+    display:flex;align-items:flex-start;gap:10px;padding:8px 10px;
+    border-radius:8px;font-size:12px;background:var(--surface-2);border:1px solid var(--border);
+  }
+  .tech-tc-row.pass{border-color:var(--teal-dim);background:rgba(62,213,152,.06);}
+  .tech-tc-row.fail{border-color:#5a1e2a;background:rgba(244,63,94,.06);}
+  .tech-tc-icon{font-size:14px;flex-shrink:0;margin-top:1px;}
+  .tech-tc-label{font-weight:600;color:var(--muted);white-space:nowrap;}
+  .tech-tc-note{color:var(--text);flex:1;word-break:break-all;font-family:'JetBrains Mono',monospace;font-size:11.5px;}
+
+  /* Evaluation panel — test results grid (final submission) */
+  #tech-evaluation-panel .tech-tc-grid{margin-top:10px;}
+
+  /* Issues panel */
+  .tech-issues-panel{margin-top:10px;}
+  .tech-issue-row{
+    display:flex;align-items:flex-start;gap:10px;padding:9px 12px;
+    border-radius:8px;margin-bottom:6px;font-size:12.5px;border:1px solid transparent;
+  }
+  .tech-issue-row.critical{background:rgba(244,63,94,.08);border-color:#5a1e2a;}
+  .tech-issue-row.warning {background:rgba(245,186,66,.07);border-color:var(--amber-dim);}
+  .tech-issue-row.info    {background:var(--surface-2);border-color:var(--border);}
+  .tech-issue-sev{
+    font-size:10px;font-weight:700;letter-spacing:.05em;text-transform:uppercase;
+    padding:2px 6px;border-radius:5px;white-space:nowrap;flex-shrink:0;margin-top:1px;
+  }
+  .tech-issue-sev.critical{background:#5a1e2a;color:#ffa0b0;}
+  .tech-issue-sev.warning {background:var(--amber-dim);color:var(--amber);}
+  .tech-issue-sev.info    {background:var(--surface-3);color:var(--muted);}
+  .tech-issue-body{flex:1;}
+  .tech-issue-desc{color:var(--text);margin-bottom:3px;}
+  .tech-issue-ln{font-size:11px;color:var(--muted);font-family:'JetBrains Mono',monospace;}
+  .tech-issue-rec{font-size:11.5px;color:var(--teal);margin-top:3px;}
+
+  /* Complexity badges inside tech panels */
+  #view-interview-tech .cmplx-row{display:flex;gap:8px;flex-wrap:wrap;margin:6px 0;}
+
+  /* ---------- DSA Coach chat (technical round) ---------- */
+  .coach-fab{position:fixed;right:22px;bottom:22px;z-index:70;display:none;align-items:center;gap:8px;padding:12px 18px;border-radius:999px;border:none;background:var(--amber);color:#1a1204;font-weight:700;font-size:14px;cursor:pointer;box-shadow:0 8px 24px rgba(0,0,0,.45);transition:transform .12s ease;}
+  .coach-fab:hover{transform:translateY(-2px);}
+  .coach-panel{position:fixed;right:22px;bottom:22px;z-index:80;width:392px;height:min(580px,80vh);display:none;flex-direction:column;background:var(--surface);border:1px solid var(--border);border-radius:16px;box-shadow:0 16px 48px rgba(0,0,0,.55);overflow:hidden;}
+  .coach-head{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:12px 14px;border-bottom:1px solid var(--border);background:var(--surface-2);}
+  .coach-title{font-weight:700;font-size:14px;}
+  .coach-sub{font-size:11px;color:var(--muted);margin-top:2px;}
+  .coach-close{background:none;border:1px solid var(--border);color:var(--text);width:30px;height:30px;border-radius:8px;cursor:pointer;font-size:14px;}
+  .coach-close:hover{background:var(--surface);}
+  .coach-body{flex:1;overflow-y:auto;padding:14px;display:flex;flex-direction:column;gap:10px;}
+  .coach-msg{display:flex;flex-direction:column;max-width:92%;}
+  .coach-msg.user{align-self:flex-end;align-items:flex-end;}
+  .coach-msg.bot{align-self:flex-start;}
+  .coach-bubble{padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.55;word-wrap:break-word;}
+  .coach-msg.user .coach-bubble{background:var(--amber);color:#1a1204;border-bottom-right-radius:4px;}
+  .coach-msg.bot .coach-bubble{background:var(--surface-2);border:1px solid var(--border);border-bottom-left-radius:4px;}
+  .coach-bubble code{background:rgba(255,255,255,.09);padding:1px 5px;border-radius:4px;font-family:'JetBrains Mono',monospace;font-size:12px;}
+  .coach-meta{font-size:10.5px;color:var(--muted);margin:3px 4px 0;}
+  .coach-chips{display:flex;flex-wrap:wrap;gap:6px;padding:8px 12px;border-top:1px solid var(--border);}
+  .coach-chip{background:var(--surface-2);border:1px solid var(--border);color:var(--text);padding:5px 10px;border-radius:999px;font-size:11.5px;cursor:pointer;}
+  .coach-chip:hover{border-color:var(--amber);color:var(--amber);}
+  .coach-chip:disabled{opacity:.5;cursor:not-allowed;}
+  .coach-inputrow{display:flex;gap:8px;padding:10px 12px;border-top:1px solid var(--border);align-items:flex-end;}
+  .coach-inputrow textarea{flex:1;min-height:38px;max-height:96px;height:38px;resize:none;padding:9px 11px;font-size:13px;}
+  .coach-inputrow .btn{padding:9px 14px;}
+  .coach-typing{display:flex;gap:4px;align-items:center;}
+  .coach-typing span.dot{width:6px;height:6px;border-radius:50%;background:var(--muted);animation:coachDot 1.2s infinite;}
+  .coach-typing span.dot:nth-child(2){animation-delay:.2s;} .coach-typing span.dot:nth-child(3){animation-delay:.4s;}
+  .coach-wait{font-size:11px;color:var(--muted);margin-left:8px;opacity:0;animation:coachFade .4s 6s forwards;}
+  @keyframes coachDot{0%,80%,100%{opacity:.25}40%{opacity:1}}
+  @keyframes coachFade{to{opacity:1}}
+  @media (max-width:800px){
+    .coach-fab{bottom:78px;right:14px;}
+    .coach-panel{right:8px;left:8px;width:auto;bottom:70px;height:72vh;}
+  }
+</style>
+</head>
+<body>
+
+<!-- ================= AUTH SCREEN ================= -->
+<div id="auth-screen">
+  <div class="auth-card">
+    <div class="auth-brand">
+      <div class="brand-mark">IQ</div>
+      <div>
+        <div class="brand-title">InterviewIQ</div>
+        <div class="brand-tagline">AI Interview &amp; Career Intelligence</div>
+      </div>
+    </div>
+    <div class="auth-toggle">
+      <button id="tab-login" class="active" onclick="setAuthMode('login')">Log In</button>
+      <button id="tab-register" onclick="setAuthMode('register')">Create Account</button>
+    </div>
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px" id="auth-title">Welcome back</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:20px" id="auth-sub">Sign in to continue your interview & career prep.</div>
+
+    <div id="register-name-field" style="display:none">
+      <label>Full Name</label>
+      <input type="text" id="reg-name" placeholder="Alex Taylor" />
+    </div>
+    <label>Email Address</label>
+    <input type="email" id="auth-email" placeholder="alex@example.com" />
+    <label>Password</label>
+    <input type="password" id="auth-password" placeholder="••••••••" />
+    <div id="forgot-password-link" style="text-align:right;margin-top:8px;">
+      <a href="#" style="font-size:12px;color:var(--muted);" onclick="showForgotPassword();return false;">Forgot password?</a>
+    </div>
+    <button class="btn block" style="margin-top:14px;padding:12px 0;" id="auth-submit" onclick="submitAuth()">Log In</button>
+    <div id="auth-error" style="display:none" class="error-box"></div>
+    <div id="auth-success" style="display:none" class="success-box"></div>
+    <div id="dev-mode-link-box" style="display:none;margin-top:12px;padding:10px;background:var(--surface-2);border-radius:8px;font-size:12px;word-break:break-all;">
+      <b>Dev mode</b> (no email server set up) — click this link to continue:<br>
+      <a id="dev-mode-link" href="#" target="_self" style="color:var(--amber);"></a>
+    </div>
+  </div>
+</div>
+
+<!-- ================= FORGOT PASSWORD SCREEN ================= -->
+<div id="forgot-screen" style="display:none;min-height:100vh;align-items:center;justify-content:center;background:radial-gradient(circle at 20% 20%, #162436 0%, var(--ink) 65%);padding:20px;">
+  <div class="auth-card">
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px">Reset your password</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:20px">Enter your account email and we'll send you a reset link.</div>
+    <label>Email Address</label>
+    <input type="email" id="forgot-email" placeholder="alex@example.com" />
+    <button class="btn block" style="margin-top:18px;padding:12px 0;" id="forgot-submit" onclick="submitForgotPassword()">Send reset link</button>
+    <div id="forgot-error" style="display:none" class="error-box"></div>
+    <div id="forgot-success" style="display:none" class="success-box"></div>
+    <div id="forgot-dev-link-box" style="display:none;margin-top:12px;padding:10px;background:var(--surface-2);border-radius:8px;font-size:12px;word-break:break-all;">
+      <b>Dev mode</b> — click this link to continue:<br>
+      <a id="forgot-dev-link" href="#" target="_self" style="color:var(--amber);"></a>
+    </div>
+    <div style="text-align:center;margin-top:16px;">
+      <a href="#" style="font-size:12px;color:var(--muted);" onclick="backToLogin();return false;">← Back to login</a>
+    </div>
+  </div>
+</div>
+
+<!-- ================= RESET PASSWORD SCREEN (reached via emailed link) ================= -->
+<div id="reset-screen" style="display:none;min-height:100vh;align-items:center;justify-content:center;background:radial-gradient(circle at 20% 20%, #162436 0%, var(--ink) 65%);padding:20px;">
+  <div class="auth-card">
+    <div style="font-size:20px;font-weight:700;margin-bottom:4px">Set a new password</div>
+    <div style="font-size:13px;color:var(--muted);margin-bottom:20px">Choose a new password for your account.</div>
+    <label>New Password</label>
+    <input type="password" id="reset-new-password" placeholder="At least 6 characters" />
+    <button class="btn block" style="margin-top:18px;padding:12px 0;" id="reset-submit" onclick="submitResetPassword()">Reset password</button>
+    <div id="reset-error" style="display:none" class="error-box"></div>
+    <div id="reset-success" style="display:none" class="success-box"></div>
+  </div>
+</div>
+
+<!-- ================= EMAIL VERIFICATION SCREEN (reached via emailed link) ================= -->
+<div id="verify-screen" style="display:none;min-height:100vh;align-items:center;justify-content:center;background:radial-gradient(circle at 20% 20%, #162436 0%, var(--ink) 65%);padding:20px;">
+  <div class="auth-card" style="text-align:center;">
+    <div id="verify-status" style="font-size:15px;">Verifying your email…</div>
+    <button class="btn block" style="margin-top:20px;padding:12px 0;" onclick="backToLogin()">Go to login</button>
+  </div>
+</div>
+
+<!-- ================= TOP NAVIGATION BAR ================= -->
+<header class="navbar" id="top-navbar" style="display:none">
+  <div class="brand-group" onclick="switchView('dashboard')">
+    <div class="brand-mark">IQ</div>
+    <div>
+      <div class="brand-title">InterviewIQ</div>
+      <div class="brand-tagline">AI Interview &amp; Career Intelligence</div>
+    </div>
+  </div>
+
+  <nav class="nav-links">
+    <div class="nav-item active" data-view="dashboard" onclick="switchView('dashboard')"><span class="nav-icon">📊</span> Dashboard</div>
+    <div class="nav-item" data-view="new-interview" onclick="switchView('new-interview')"><span class="nav-icon">🎯</span> Start Interview</div>
+    <div class="nav-item" data-view="career-path" onclick="switchView('career-path')"><span class="nav-icon">🧭</span> Career Path Recommendation</div>
+    <div class="nav-item" data-view="history" onclick="switchView('history')"><span class="nav-icon">📜</span> History</div>
+  </nav>
+
+  <div class="nav-right">
+    <div class="user-badge"><span class="user-dot"></span> <span id="user-name-chip">Candidate</span></div>
+    <button class="logout-btn" onclick="logout()">Sign Out</button>
+  </div>
+</header>
+
+<!-- ================= MOBILE BOTTOM TAB BAR ================= -->
+<nav class="mobile-tabbar" id="mobile-tabbar">
+  <div class="tab-item active" data-view="dashboard" onclick="switchView('dashboard')">
+    <span class="tab-icon">📊</span><span class="tab-label">Dashboard</span>
+  </div>
+  <div class="tab-item" data-view="new-interview" onclick="switchView('new-interview')">
+    <span class="tab-icon">🎯</span><span class="tab-label">Interview</span>
+  </div>
+  <div class="tab-item" data-view="career-path" onclick="switchView('career-path')">
+    <span class="tab-icon">🧭</span><span class="tab-label">Career</span>
+  </div>
+  <div class="tab-item" data-view="history" onclick="switchView('history')">
+    <span class="tab-icon">📜</span><span class="tab-label">History</span>
+  </div>
+</nav>
+
+<!-- ================= MAIN CONTENT ================= -->
+<main id="main-content" style="display:none">
+
+  <!-- ================= 1. DASHBOARD ================= -->
+  <section class="view active" id="view-dashboard">
+    <div class="hero-banner">
+      <div id="welcome-greeting" style="font-size:12.5px;color:var(--amber);font-weight:700;text-transform:uppercase;letter-spacing:.08em;margin-bottom:8px">Welcome</div>
+      <h1>Next-Gen <span class="accent">AI Interview</span> &amp; Career Platform</h1>
+      <p id="welcome-sub">Prepare for top tech companies with project-tailored HR interviews, LeetCode-style DSA coding challenges, and personalized career roadmaps.</p>
+      <div class="hero-actions">
+        <button class="btn" onclick="switchView('new-interview')">🚀 Start Mock Interview</button>
+        <button class="btn secondary" onclick="switchView('career-path')">🧭 Explore Career Roadmap</button>
+      </div>
+    </div>
+
+    <h2 style="font-size:22px;margin:28px 0 16px;">Intelligent <span style="color:var(--amber)">Interview Capabilities</span></h2>
+    <div class="feature-grid">
+      <div class="feature-card">
+        <div class="feature-icon">🗣️</div>
+        <div>
+          <div class="feature-title">HR &amp; Behavioral Round</div>
+          <div class="feature-desc">Questions dynamically tailored to your resume projects, technical skills, and STAR situational scenarios.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">💻</div>
+        <div>
+          <div class="feature-title">Technical &amp; LeetCode DSA Mode</div>
+          <div class="feature-desc">Interactive code editor with algorithm problem statements, test cases, and AI time/space complexity evaluation.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">🧭</div>
+        <div>
+          <div class="feature-title">Career Path &amp; Skills Gap Analysis</div>
+          <div class="feature-desc">Benchmark your resume against target industry roles and generate a downloadable step-by-step career roadmap.</div>
+        </div>
+      </div>
+      <div class="feature-card">
+        <div class="feature-icon">📥</div>
+        <div>
+          <div class="feature-title">Downloadable PDF Reports</div>
+          <div class="feature-desc">Export comprehensive performance reviews, candidate code analysis, and learning roadmaps in PDF.</div>
+        </div>
+      </div>
+    </div>
+
+    <h2 style="font-size:22px;margin:32px 0 16px;">Your <span style="color:var(--teal)">Performance Overview</span></h2>
+    <div class="grid grid-3" id="dash-stats"></div>
+    <div class="grid grid-split" style="margin-top:20px;">
+      <div class="card">
+        <h3 style="margin-top:0">Topic-wise Mastery</h3>
+        <div id="dash-topics"><p class="hint">Complete a mock interview to view your topic breakdown.</p></div>
+      </div>
+      <div class="card">
+        <h3 style="margin-top:0">Recent Sessions</h3>
+        <div id="dash-recent"><p class="hint">No completed sessions yet.</p></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 2. NEW INTERVIEW SETUP ================= -->
+  <section class="view" id="view-new-interview">
+    <div class="page-header">
+      <h1 class="page-title">Configure Mock Interview</h1>
+      <p class="page-sub">Select your interview mode, target role, difficulty, and upload your resume to tailor questions.</p>
+    </div>
+
+    <div class="card" style="max-width:860px;margin:0 auto;">
+      <div style="font-size:12px;color:var(--muted);display:flex;align-items:center;gap:8px;margin-bottom:18px;">
+        <span style="width:8px;height:8px;border-radius:50%;background:var(--teal)" id="setup-ai-dot"></span>
+        <span id="setup-ai-status">AI Engine Connected</span>
+      </div>
+
+      <label style="margin-top:0">1. Select Interview Mode</label>
+      <div class="mode-selector">
+        <div class="mode-card selected" id="mode-card-hr" onclick="selectInterviewMode('hr')">
+          <div class="mode-card-header">
+            <span class="mode-title">🗣️ HR Interview Mode</span>
+            <span class="badge green">STAR Method</span>
+          </div>
+          <div class="mode-desc">Questions tailored directly to your resume projects, technical skills, leadership, and role behavioral fit.</div>
+        </div>
+        <div class="mode-card" id="mode-card-tech" onclick="selectInterviewMode('technical')">
+          <div class="mode-card-header">
+            <span class="mode-title">💻 Technical Mode</span>
+            <span class="badge amber">LeetCode / DSA</span>
+          </div>
+          <div class="mode-desc">Algorithmic coding challenges with live code editor, test case runner, and complexity analysis.</div>
+        </div>
+      </div>
+
+      <div class="grid grid-2" style="margin-top:16px;">
+        <div>
+          <label>Target Role</label>
+          <select id="setup-role" onchange="onRoleChange()"></select>
+        </div>
+        <div>
+          <label>Role Domain / Category</label>
+          <input type="text" id="setup-role-category" value="Software Engineering" readonly />
+        </div>
+      </div>
+
+      <div class="grid grid-3" style="margin-top:8px;">
+        <div>
+          <label>Target Company</label>
+          <input type="text" id="setup-company" placeholder="e.g. Google, Amazon, TCS…" />
+        </div>
+        <div>
+          <label>Difficulty Level</label>
+          <select id="setup-difficulty">
+            <option value="easy">Easy</option>
+            <option value="medium" selected>Medium</option>
+            <option value="hard">Hard</option>
+          </select>
+        </div>
+        <div>
+          <label>Number of Questions</label>
+          <select id="setup-num">
+            <option value="3">3 Questions</option>
+            <option value="5" selected>5 Questions</option>
+            <option value="8">8 Questions</option>
+          </select>
+        </div>
+      </div>
+
+      <div style="margin-top:20px;padding:16px;background:var(--surface-2);border:1px solid var(--border);border-radius:12px;">
+        <div style="font-weight:600;font-size:14px;margin-bottom:6px;display:flex;align-items:center;gap:8px;">
+          <span>📄 Resume Tailoring</span>
+          <span class="badge green" id="resume-status-badge">Optional</span>
+        </div>
+        <p class="hint" style="margin:0 0 12px 0;">Upload your resume so our AI extracts your name, skills, projects, education and experience to customize the questions. Accepted: <b>PDF · DOCX · TXT · Image (PNG/JPG) · Audio (MP3/WAV/M4A) · Video (MP4/MOV)</b> — for audio/video, just speak your background for 1–3 minutes.</p>
+        <div style="display:flex;gap:12px;align-items:center;">
+          <input type="file" id="setup-resume-file" accept=".pdf,.docx,.txt,.md,image/*,audio/*,video/*" style="flex:1" onchange="previewResumeUpload(this)" />
+        </div>
+        <div id="setup-resume-preview" style="display:none;margin-top:12px;padding:10px;background:var(--surface-3);border-radius:8px;font-size:12.5px;"></div>
+      </div>
+
+      <button class="btn block" style="margin-top:24px;padding:14px 0;font-size:15px;" onclick="startConfiguredInterview()">🚀 Start Mock Interview</button>
+    </div>
+  </section>
+
+  <!-- ================= 3. HR INTERVIEW RUNNER ================= -->
+  <section class="view" id="view-interview-hr">
+    <div class="page-header">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <h1 class="page-title" id="hr-title">HR Mock Interview</h1>
+          <p class="page-sub" id="hr-meta">Tailored to your resume &amp; target role</p>
+        </div>
+        <div class="badge amber" id="hr-progress-pill">Question 1 of 5</div>
+      </div>
+    </div>
+
+    <div class="card" style="max-width:860px;margin:0 auto;">
+      <!-- AI Interviewer Voice Stage -->
+      <div class="interviewer-stage">
+        <div style="display:flex;align-items:center;gap:14px;">
+          <div class="ai-voice-avatar" id="hr-ai-avatar">🤖</div>
+          <div>
+            <div style="font-family:'Space Grotesk';font-weight:700;font-size:16px;">AI Interviewer</div>
+            <div style="font-size:12px;color:var(--muted);" id="hr-ai-sub">Voice Narration Enabled</div>
+          </div>
+        </div>
+        <div style="display:flex;align-items:center;gap:10px;">
+          <span class="badge amber" id="hr-ai-status-badge">🔊 AI Speaking...</span>
+          <button class="btn secondary" style="padding:6px 12px;font-size:12px;" onclick="replayHrQuestion()">🔊 Replay Question</button>
+        </div>
+      </div>
+
+      <div style="font-size:11.5px;color:var(--amber);font-weight:700;text-transform:uppercase;letter-spacing:.06em;margin-bottom:8px;" id="hr-topic">Project Architecture</div>
+      <div style="font-size:20px;font-weight:600;line-height:1.5;margin-bottom:20px;font-family:'Space Grotesk'" id="hr-question-text">Question loading…</div>
+
+      <!-- Dialogue Response Box with Real-Time Speech -->
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:6px;">
+        <label style="margin:0;">Your Spoken Response (Live Dialogue Box)</label>
+        <span id="hr-speech-live-indicator" style="display:none;font-size:12px;color:var(--teal);font-weight:600;display:flex;align-items:center;gap:6px;">
+          <span style="width:8px;height:8px;border-radius:50%;background:var(--teal);display:inline-block;animation:pulseMic 1s infinite;"></span> Listening live... (Words appear below)
+        </span>
+      </div>
+
+      <textarea id="hr-answer-input" class="dialogue-textarea" placeholder="Speak your answer aloud into your microphone, or type your response here..."></textarea>
+
+      <div style="display:flex;justify-content:space-between;align-items:center;margin-top:14px;flex-wrap:wrap;gap:10px;">
+        <div style="display:flex;gap:10px;">
+          <button class="btn secondary" id="hr-speech-btn" onclick="toggleHrSpeech()">🎙️ Speak Answer</button>
+          <button class="btn secondary" onclick="clearHrDialogue()">🔄 Clear</button>
+        </div>
+        <button class="btn" id="hr-submit-btn" onclick="submitHrAnswer()">🚀 Submit Response</button>
+      </div>
+
+      <div id="hr-feedback-box" style="display:none;margin-top:20px;padding:18px;border-radius:12px;background:var(--surface-2);border:1px solid var(--border);">
+        <div style="display:flex;align-items:center;justify-content:space-between;margin-bottom:10px;">
+          <span style="font-weight:700;font-size:16px;">AI Evaluation</span>
+          <span style="font-family:'Space Grotesk';font-size:22px;font-weight:700;color:var(--amber)" id="hr-fb-score">8.5/10</span>
+        </div>
+        <div style="font-size:13.5px;color:var(--text);margin-bottom:8px;" id="hr-fb-text"></div>
+        <div style="font-size:13px;color:var(--teal);margin-bottom:6px;"><b>Strengths:</b> <span id="hr-fb-strengths"></span></div>
+        <div style="font-size:13px;color:var(--amber);"><b>Improvement Tip:</b> <span id="hr-fb-tip"></span></div>
+      </div>
+
+      <button class="btn block" id="hr-next-btn" style="display:none;margin-top:20px;" onclick="nextHrQuestion()">Next Question →</button>
+      <button class="btn block teal" id="hr-finish-btn" style="display:none;margin-top:20px;" onclick="finishSession()">Complete Interview &amp; View Results</button>
+    </div>
+  </section>
+
+  <!-- ================= 4. TECHNICAL CODING INTERVIEW RUNNER (LeetCode IDE) ================= -->
+  <section class="view" id="view-interview-tech">
+    <div class="page-header" style="margin-bottom:18px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <div>
+          <h1 class="page-title" id="tech-title">Technical Coding Challenge</h1>
+          <p class="page-sub" id="tech-meta">LeetCode &amp; DSA Problem Solving</p>
+        </div>
+        <div class="badge amber" id="tech-progress-pill">Challenge 1 of 3</div>
+      </div>
+    </div>
+
+    <div class="coding-layout">
+      <!-- Left: Problem Statement -->
+      <div class="problem-panel">
+        <div style="display:flex;align-items:center;gap:8px;margin-bottom:12px;">
+          <span class="problem-tag medium" id="tech-diff-tag">Medium</span>
+          <span style="font-size:12px;color:var(--muted);font-weight:600;" id="tech-topic-tag">Arrays &amp; Hash Table</span>
+        </div>
+        <h2 style="font-size:22px;margin:0 0 10px;" id="tech-problem-title">Two Sum</h2>
+        <div class="problem-desc" id="tech-problem-desc">Problem statement...</div>
+
+        <h4 style="font-size:14px;color:var(--muted);margin:16px 0 8px;">Examples</h4>
+        <div id="tech-examples-container"></div>
+
+        <h4 style="font-size:14px;color:var(--muted);margin:16px 0 8px;">Constraints</h4>
+        <ul id="tech-constraints-list" style="font-size:12.5px;color:var(--muted);padding-left:18px;margin:0;"></ul>
+
+        <div style="margin-top:20px;padding:12px;background:var(--surface-2);border-radius:8px;font-size:12.5px;" id="tech-hints-box">
+          <b>💡 Hint:</b> <span id="tech-hint-text">Think about time and space tradeoffs.</span>
+        </div>
+      </div>
+
+      <!-- Right: Code Editor & Execution -->
+      <div class="editor-panel">
+        <div class="editor-topbar">
+          <div style="display:flex;align-items:center;gap:10px;">
+            <span style="font-size:12px;font-weight:600;color:var(--muted)">Language:</span>
+            <select id="tech-lang-select" style="padding:4px 8px;font-size:12px;width:auto;" onchange="onTechLangChange()">
+              <option value="python" selected>Python 3</option>
+              <option value="javascript">JavaScript (Node.js)</option>
+              <option value="java">Java</option>
+              <option value="cpp">C++</option>
+            </select>
+          </div>
+          <div style="font-size:12px;color:var(--muted);font-family:'JetBrains Mono'">UTF-8</div>
+        </div>
+
+        <!-- Analysis mode indicator — Technical Mode only -->
+        <div id="tech-mode-indicator" class="tech-mode-indicator mode-exec" style="margin:8px 12px 0;">
+          <span class="dot"></span>
+          <span id="tech-mode-label">🟢 Python — Real Execution + AI Analysis</span>
+        </div>
+
+        <textarea class="editor-textarea" id="tech-code-editor" spellcheck="false" placeholder="// Write your solution here..."></textarea>
+
+        <!-- Dry-run panel: revealed by "▶ Test Solution" button — Technical Mode only -->
+        <div id="tech-dryrun-panel">
+          <div class="dryrun-header" onclick="toggleDryrunPanel()">
+            <span style="font-weight:700;font-size:13.5px;">▶ Test Results &amp; Live Analysis</span>
+            <span id="tech-dryrun-toggle-icon" style="font-size:12px;color:var(--muted);">▲ collapse</span>
+          </div>
+          <div id="tech-dryrun-inner">
+            <!-- Execution results (Python only) -->
+            <div id="tech-dryrun-exec" style="display:none;">
+              <div style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">
+                🧪 Test Case Execution (Python)
+              </div>
+              <div id="tech-dryrun-tc-grid" class="tech-tc-grid"></div>
+              <div id="tech-dryrun-exec-summary" style="font-size:12px;margin-top:8px;color:var(--muted);"></div>
+            </div>
+
+            <!-- AI static analysis note for non-Python -->
+            <div id="tech-dryrun-static-note" style="display:none;padding:8px 12px;background:rgba(245,186,66,.07);border:1px solid var(--amber-dim);border-radius:8px;font-size:12px;color:var(--amber);margin-bottom:10px;">
+              ⚠️ <b>AI Static Analysis only</b> — no real execution performed for this language. Results are Gemini's read of the source code.
+            </div>
+
+            <!-- AI analysis: complexity + correctness -->
+            <div id="tech-dryrun-ai" style="display:none;margin-top:10px;">
+              <div style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">
+                🤖 AI Analysis
+              </div>
+              <div class="cmplx-row">
+                <span class="badge green" id="tech-dryrun-time"></span>
+                <span class="badge amber" id="tech-dryrun-space"></span>
+              </div>
+              <div style="font-size:13px;color:var(--text);margin:6px 0;" id="tech-dryrun-correctness"></div>
+              <div style="font-size:12.5px;color:var(--teal);" id="tech-dryrun-strengths"></div>
+              <div style="font-size:12.5px;color:var(--amber);margin-top:4px;" id="tech-dryrun-tip"></div>
+            </div>
+
+            <!-- Issues panel -->
+            <div id="tech-dryrun-issues-wrap" style="display:none;margin-top:12px;">
+              <div style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">
+                🐛 Issues Detected
+              </div>
+              <div id="tech-dryrun-issues" class="tech-issues-panel"></div>
+            </div>
+
+            <div id="tech-dryrun-empty" style="display:none;font-size:13px;color:var(--muted);padding:10px 0;">
+              No issues found. Write some code and click Test Solution.
+            </div>
+          </div>
+        </div>
+
+        <!-- Final Evaluation Panel (shown after Submit Code) — Technical Mode only -->
+        <div id="tech-evaluation-panel" style="display:none;padding:16px;background:var(--surface);border-top:1px solid var(--border);max-height:420px;overflow-y:auto;">
+          <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px;">
+            <span style="font-weight:700;font-size:15px;">📊 Code Assessment</span>
+            <div style="display:flex;align-items:center;gap:10px;">
+              <span id="tech-eval-mode-badge" style="font-size:10.5px;font-weight:600;padding:3px 8px;border-radius:5px;background:var(--surface-3);color:var(--muted);"></span>
+              <span style="font-family:'Space Grotesk';font-size:20px;font-weight:700;color:var(--amber)" id="tech-eval-score">—/10</span>
+            </div>
+          </div>
+
+          <div class="cmplx-row">
+            <span class="badge green" id="tech-eval-time">Time: —</span>
+            <span class="badge amber" id="tech-eval-space">Space: —</span>
+          </div>
+
+          <!-- Test case results grid -->
+          <div id="tech-eval-tc-wrap" style="display:none;">
+            <div style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin:10px 0 6px;">
+              🧪 Test Case Results
+            </div>
+            <div id="tech-eval-tc-grid" class="tech-tc-grid"></div>
+          </div>
+
+          <!-- AI feedback -->
+          <div style="font-size:13px;color:var(--text);margin:10px 0 6px;" id="tech-eval-feedback"></div>
+          <div style="font-size:12.5px;color:var(--teal);" id="tech-eval-strengths"></div>
+
+          <!-- Issues from final submission -->
+          <div id="tech-eval-issues-wrap" style="display:none;margin-top:10px;">
+            <div style="font-size:11.5px;font-weight:700;color:var(--muted);text-transform:uppercase;letter-spacing:.05em;margin-bottom:6px;">
+              🐛 Issues Found
+            </div>
+            <div id="tech-eval-issues" class="tech-issues-panel"></div>
+          </div>
+        </div>
+
+        <div class="editor-actions">
+          <button class="btn secondary" id="tech-run-btn" onclick="runTechDryRun()">▶ Test Solution</button>
+          <div style="display:flex;gap:10px;">
+            <button class="btn" id="tech-submit-btn" onclick="submitTechCode()">🚀 Submit Code</button>
+            <button class="btn block" id="tech-next-btn" style="display:none;" onclick="nextTechQuestion()">Next Challenge →</button>
+            <button class="btn teal" id="tech-finish-btn" style="display:none;" onclick="finishSession()">Complete Interview</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ================= 5. CAREER PATH RECOMMENDATION ================= -->
+  <section class="view" id="view-career-path">
+    <div class="page-header">
+      <h1 class="page-title">Career Path Recommendation</h1>
+      <p class="page-sub">Select your target job role and upload your resume to discover your skill match, analyze gaps, and download a step-by-step career roadmap.</p>
+    </div>
+
+    <div class="card" style="max-width:860px;margin-bottom:24px;">
+      <div class="grid grid-2">
+        <div>
+          <label style="margin-top:0">Target Job Role</label>
+          <select id="cp-target-role" onchange="onCareerRoleChange()"></select>
+        </div>
+        <div>
+          <label style="margin-top:0">Upload Resume</label>
+          <input type="file" id="cp-resume-file" accept=".pdf,.docx,.txt,.md,image/*,audio/*,video/*" />
+          <div class="hint" style="margin-top:6px;">PDF · DOCX · TXT · Image (PNG/JPG) · Audio (MP3/WAV/M4A) · Video (MP4/MOV)</div>
+        </div>
+      </div>
+      <button class="btn block" style="margin-top:18px;" id="cp-analyze-btn" onclick="analyzeCareerPath()">🧭 Analyze Career Path &amp; Generate Roadmap</button>
+    </div>
+
+    <!-- Career Analysis Output -->
+    <div id="cp-results-container" style="display:none;">
+      <div class="result-hero" style="margin-bottom:20px;">
+        <div class="score-ring" id="cp-gauge" style="--pct:75">
+          <div class="score-ring-inner" id="cp-match-num">75%</div>
+        </div>
+        <div style="flex:1">
+          <div style="font-size:13px;color:var(--muted)">Target Role Match</div>
+          <div style="font-size:22px;font-weight:700;margin:2px 0 4px;" id="cp-role-display">Full Stack Developer</div>
+          <div style="font-size:13.5px;color:var(--teal);" id="cp-readiness-display">Job Ready (High Match)</div>
+        </div>
+        <button class="btn" style="white-space:nowrap;" onclick="downloadCareerRoadmapPdf()">⬇ Download Career Roadmap (PDF)</button>
+      </div>
+
+      <!-- Skills Comparison Grid -->
+      <div class="grid grid-2" style="margin-bottom:24px;">
+        <div class="card" style="border-left:4px solid var(--teal);">
+          <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:16px;">
+            <span>✅ Matched Skills You Have</span>
+            <span class="badge green" id="cp-matched-count">0</span>
+          </h3>
+          <div id="cp-matched-tags" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;"></div>
+        </div>
+
+        <div class="card" style="border-left:4px solid var(--amber);">
+          <h3 style="margin-top:0;display:flex;align-items:center;gap:8px;font-size:16px;">
+            <span>⚡ Skills to Acquire (Gap)</span>
+            <span class="badge amber" id="cp-missing-count">0</span>
+          </h3>
+          <div id="cp-missing-tags" style="display:flex;flex-wrap:wrap;gap:6px;margin-top:10px;"></div>
+        </div>
+      </div>
+
+      <!-- Phased Roadmap Cards -->
+      <div class="card" style="margin-bottom:24px;">
+        <h2 style="font-size:20px;margin-top:0;margin-bottom:16px;">Step-by-Step <span style="color:var(--amber)">Career Learning Roadmap</span></h2>
+        <div id="cp-phases-list"></div>
+      </div>
+
+      <!-- Recommended Portfolio Projects -->
+      <div class="card">
+        <h2 style="font-size:20px;margin-top:0;margin-bottom:14px;">Recommended <span style="color:var(--teal)">Capstone Projects</span></h2>
+        <div id="cp-projects-list"></div>
+      </div>
+    </div>
+  </section>
+
+  <!-- ================= 6. RESULTS & POST-INTERVIEW ROADMAP ================= -->
+  <section class="view" id="view-results">
+    <div class="page-header">
+      <h1 class="page-title">Interview Performance Results</h1>
+      <p class="page-sub">Comprehensive assessment breakdown and personalized AI study roadmap.</p>
+    </div>
+    <div id="results-content"></div>
+  </section>
+
+  <!-- ================= 7. HISTORY ================= -->
+  <section class="view" id="view-history">
+    <div class="page-header">
+      <h1 class="page-title">Session History</h1>
+      <p class="page-sub">All your completed mock interviews and evaluations.</p>
+    </div>
+    <div class="card">
+      <table id="history-table">
+        <thead>
+          <tr><th>Date</th><th>Role</th><th>Company</th><th>Mode</th><th>Score</th></tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </section>
+
+</main>
+
+
+<!-- ================= DSA COACH (technical round chat) ================= -->
+<button class="coach-fab" id="coach-fab" onclick="toggleCoach()" title="Ask the coach for help (no code, only explanations)">💬 Ask Coach</button>
+<div class="coach-panel" id="coach-panel" role="dialog" aria-label="DSA coach">
+  <div class="coach-head">
+    <div>
+      <div class="coach-title">🧑‍🏫 DSA Coach</div>
+      <div class="coach-sub">Explains the problem &amp; the logic — never the code</div>
+    </div>
+    <button class="coach-close" onclick="toggleCoach()" title="Close">✕</button>
+  </div>
+  <div class="coach-body" id="coach-body"></div>
+  <div class="coach-chips" id="coach-chips">
+    <button class="coach-chip" data-msg="Explain the question" onclick="sendCoachMessage(this.dataset.msg)">Explain the question</button>
+    <button class="coach-chip" data-msg="Give me a hint" onclick="sendCoachMessage(this.dataset.msg)">Give me a hint</button>
+    <button class="coach-chip" data-msg="Explain the logic" onclick="sendCoachMessage(this.dataset.msg)">Explain the logic</button>
+    <button class="coach-chip" data-msg="What is the time and space complexity?" onclick="sendCoachMessage(this.dataset.msg)">Complexity?</button>
+    <button class="coach-chip" data-msg="Why is my code failing?" onclick="sendCoachMessage(this.dataset.msg)">Why is my code failing?</button>
+  </div>
+  <div class="coach-inputrow">
+    <textarea id="coach-input" rows="1" maxlength="500" placeholder="Ask about the problem, logic or complexity…" onkeydown="coachKey(event)" oninput="coachAutoGrow(this)"></textarea>
+    <button class="btn" id="coach-send" onclick="sendCoachMessage()">Send</button>
+  </div>
+</div>
+
+<script>
+const API = "";
+let TOKEN = localStorage.getItem("interviewiq_token") || localStorage.getItem("prepwise_token") || null;
+let CURRENT_USER = null;
+let authMode = "login";
+
+// State
+let supportedRoles = [];
+let currentSession = null;
+let currentQIndex = 0;
+let selectedInterviewMode = "hr";
+let latestCareerAnalysis = null;
+let currentResumePreview = null;
+
+// Speech Recognition for HR Mode
+let recognition = null;
+let isRecording = false;
+
+// ---------------- Auth ----------------
+function setAuthMode(mode){
+  authMode = mode;
+  document.getElementById("tab-login").classList.toggle("active", mode==="login");
+  document.getElementById("tab-register").classList.toggle("active", mode==="register");
+  document.getElementById("register-name-field").style.display = mode==="register" ? "block" : "none";
+  document.getElementById("auth-title").textContent = mode==="login" ? "Welcome back" : "Create your account";
+  document.getElementById("auth-sub").textContent = mode==="login" ? "Sign in to continue your interview & career prep." : "Start practicing in under a minute.";
+  document.getElementById("auth-submit").textContent = mode==="login" ? "Log In" : "Create Account";
+  document.getElementById("forgot-password-link").style.display = mode==="login" ? "block" : "none";
+  document.getElementById("auth-error").style.display = "none";
+  document.getElementById("auth-success").style.display = "none";
+  document.getElementById("dev-mode-link-box").style.display = "none";
+}
+
+async function submitAuth(){
+  const email = document.getElementById("auth-email").value.trim();
+  const password = document.getElementById("auth-password").value;
+  const errBox = document.getElementById("auth-error");
+  const successBox = document.getElementById("auth-success");
+  const devBox = document.getElementById("dev-mode-link-box");
+  errBox.style.display = "none";
+  successBox.style.display = "none";
+  devBox.style.display = "none";
+  const btn = document.getElementById("auth-submit");
+  btn.disabled = true;
+
+  try {
+    if (authMode === "register"){
+      const name = document.getElementById("reg-name").value.trim();
+      if(!name || !email || !password){ throw new Error("Please fill in all fields."); }
+      const res = await fetch(API+"/api/register", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({name, email, password})});
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.detail || "Registration failed.");
+
+      successBox.textContent = data.message;
+      successBox.style.display = "block";
+      if(data.dev_verification_link){
+        document.getElementById("dev-mode-link").href = data.dev_verification_link;
+        document.getElementById("dev-mode-link").textContent = data.dev_verification_link;
+        devBox.style.display = "block";
+      }
+      // Switch to login mode so they can log in right after verifying
+      setAuthMode("login");
+      document.getElementById("auth-success").style.display = "block";
+      document.getElementById("auth-success").textContent = data.message;
+    } else {
+      if(!email || !password){ throw new Error("Please enter email and password."); }
+      const res = await fetch(API+"/api/login", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({email, password})});
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.detail || "Authentication failed.");
+
+      TOKEN = data.access_token;
+      CURRENT_USER = data.user;
+      localStorage.setItem("interviewiq_token", TOKEN);
+      enterApp();
+    }
+  } catch(e){
+    errBox.innerHTML = e.message;
+    if(e.message.toLowerCase().includes("verify your email")){
+      errBox.innerHTML += ` <a href="#" style="color:#fff;text-decoration:underline;" onclick="resendVerification();return false;">Resend verification email</a>`;
+    }
+    errBox.style.display = "block";
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function resendVerification(){
+  const email = document.getElementById("auth-email").value.trim();
+  const errBox = document.getElementById("auth-error");
+  const successBox = document.getElementById("auth-success");
+  const devBox = document.getElementById("dev-mode-link-box");
+  if(!email){ return; }
+  try {
+    const res = await fetch(API+"/api/resend-verification", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({email})});
+    const data = await res.json();
+    errBox.style.display = "none";
+    successBox.textContent = data.message;
+    successBox.style.display = "block";
+    if(data.dev_verification_link){
+      document.getElementById("dev-mode-link").href = data.dev_verification_link;
+      document.getElementById("dev-mode-link").textContent = data.dev_verification_link;
+      devBox.style.display = "block";
+    }
+  } catch(e){
+    errBox.textContent = "Could not resend verification email.";
+    errBox.style.display = "block";
+  }
+}
+
+function showForgotPassword(){
+  document.getElementById("auth-screen").style.display = "none";
+  document.getElementById("forgot-screen").style.display = "flex";
+  document.getElementById("forgot-email").value = document.getElementById("auth-email").value.trim();
+  document.getElementById("forgot-error").style.display = "none";
+  document.getElementById("forgot-success").style.display = "none";
+  document.getElementById("forgot-dev-link-box").style.display = "none";
+}
+
+function backToLogin(){
+  document.getElementById("forgot-screen").style.display = "none";
+  document.getElementById("reset-screen").style.display = "none";
+  document.getElementById("verify-screen").style.display = "none";
+  document.getElementById("auth-screen").style.display = "flex";
+  // Clean the URL of any ?verify= or ?reset= params
+  window.history.replaceState({}, document.title, window.location.pathname);
+}
+
+async function submitForgotPassword(){
+  const email = document.getElementById("forgot-email").value.trim();
+  const errBox = document.getElementById("forgot-error");
+  const successBox = document.getElementById("forgot-success");
+  const devBox = document.getElementById("forgot-dev-link-box");
+  errBox.style.display = "none"; successBox.style.display = "none"; devBox.style.display = "none";
+  if(!email){ errBox.textContent = "Please enter your email."; errBox.style.display = "block"; return; }
+
+  const btn = document.getElementById("forgot-submit");
+  btn.disabled = true;
+  try {
+    const res = await fetch(API+"/api/forgot-password", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({email})});
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.detail || "Something went wrong.");
+    successBox.textContent = data.message;
+    successBox.style.display = "block";
+    if(data.dev_verification_link){
+      document.getElementById("forgot-dev-link").href = data.dev_verification_link;
+      document.getElementById("forgot-dev-link").textContent = data.dev_verification_link;
+      devBox.style.display = "block";
+    }
+  } catch(e){
+    errBox.textContent = e.message;
+    errBox.style.display = "block";
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+let resetTokenFromUrl = null;
+
+async function submitResetPassword(){
+  const newPassword = document.getElementById("reset-new-password").value;
+  const errBox = document.getElementById("reset-error");
+  const successBox = document.getElementById("reset-success");
+  errBox.style.display = "none"; successBox.style.display = "none";
+  if(!newPassword || newPassword.length < 6){ errBox.textContent = "Password must be at least 6 characters."; errBox.style.display = "block"; return; }
+
+  const btn = document.getElementById("reset-submit");
+  btn.disabled = true;
+  try {
+    const res = await fetch(API+"/api/reset-password", {method:"POST", headers:{"Content-Type":"application/json"}, body: JSON.stringify({token: resetTokenFromUrl, new_password: newPassword})});
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.detail || "Could not reset password.");
+    successBox.textContent = data.message + " Redirecting to login…";
+    successBox.style.display = "block";
+    setTimeout(backToLogin, 2000);
+  } catch(e){
+    errBox.textContent = e.message;
+    errBox.style.display = "block";
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function handleUrlAuthLinks(){
+  const params = new URLSearchParams(window.location.search);
+  const verifyToken = params.get("verify");
+  const resetToken = params.get("reset");
+
+  if(verifyToken){
+    document.getElementById("auth-screen").style.display = "none";
+    document.getElementById("verify-screen").style.display = "flex";
+    const statusEl = document.getElementById("verify-status");
+    try {
+      const res = await fetch(API+`/api/verify-email?token=${encodeURIComponent(verifyToken)}`);
+      const data = await res.json();
+      if(!res.ok) throw new Error(data.detail || "Verification failed.");
+      statusEl.textContent = "✅ " + data.message;
+    } catch(e){
+      statusEl.textContent = "❌ " + e.message;
+    }
+    return true;
+  }
+
+  if(resetToken){
+    resetTokenFromUrl = resetToken;
+    document.getElementById("auth-screen").style.display = "none";
+    document.getElementById("reset-screen").style.display = "flex";
+    return true;
+  }
+
+  return false;
+}
+
+function logout(){
+  TOKEN = null; CURRENT_USER = null;
+  localStorage.removeItem("interviewiq_token");
+  localStorage.removeItem("prepwise_token");
+  document.getElementById("main-content").style.display = "none";
+  document.getElementById("top-navbar").style.display = "none";
+  document.getElementById("mobile-tabbar").style.display = "none";
+  document.getElementById("auth-screen").style.display = "flex";
+}
+
+async function authedFetch(url, options={}){
+  options.headers = Object.assign({}, options.headers, {Authorization: "Bearer "+TOKEN});
+  const res = await fetch(API+url, options);
+  if(res.status === 401){ logout(); throw new Error("Session expired. Please log in again."); }
+  return res;
+}
+
+async function enterApp(){
+  document.getElementById("auth-screen").style.display = "none";
+  document.getElementById("top-navbar").style.display = "flex";
+  document.getElementById("main-content").style.display = "block";
+  document.getElementById("mobile-tabbar").style.display = "";
+  document.getElementById("user-name-chip").textContent = CURRENT_USER ? CURRENT_USER.name : "Candidate";
+  await loadRoles();
+  await loadDashboard();
+}
+
+// ---------------- Nav ----------------
+function switchView(view){
+  document.querySelectorAll(".view").forEach(v=>v.classList.remove("active"));
+  const target = document.getElementById("view-"+view);
+  if(target) target.classList.add("active");
+  document.querySelectorAll(".nav-item").forEach(n=>n.classList.toggle("active", n.dataset.view===view));
+  document.querySelectorAll(".tab-item").forEach(n=>n.classList.toggle("active", n.dataset.view===view));
+  window.scrollTo({top:0, behavior:"smooth"});
+  if(view==="dashboard") loadDashboard();
+  if(view==="history") loadHistory();
+  if(view==="career-path") setupCareerPathView();
+  updateCoachVisibility(view);
+}
+
+// ---------------- Roles & Init ----------------
+async function loadRoles(){
+  try {
+    const res = await authedFetch("/api/roles");
+    const data = await res.json();
+    supportedRoles = data.roles_detailed || [];
+
+    const roleSelect = document.getElementById("setup-role");
+    const cpRoleSelect = document.getElementById("cp-target-role");
+
+    const optionsHtml = supportedRoles.map(r=>`<option value="${r.title}">${r.title}</option>`).join("");
+    roleSelect.innerHTML = optionsHtml;
+    cpRoleSelect.innerHTML = optionsHtml;
+
+    onRoleChange();
+    document.getElementById("setup-ai-dot").style.background = data.ai_powered ? "var(--teal)" : "var(--muted)";
+    document.getElementById("setup-ai-status").textContent = data.ai_powered 
+      ? `AI Engine Connected (${data.ai_provider})` 
+      : "Built-in mode (start Ollama or add an API key for AI-generated questions)";
+  } catch(e){}
+}
+
+function onRoleChange(){
+  const roleName = document.getElementById("setup-role").value;
+  const match = supportedRoles.find(r=>r.title === roleName);
+  if(match){
+    document.getElementById("setup-role-category").value = match.category;
+  }
+}
+
+function onCareerRoleChange(){
+  // triggers when target role changes in career view
+}
+
+// ---------------- Dashboard ----------------
+async function loadDashboard(){
+  try {
+    const res = await authedFetch("/api/dashboard");
+    const d = await res.json();
+    const firstName = CURRENT_USER ? CURRENT_USER.name.split(" ")[0] : "there";
+    document.getElementById("welcome-greeting").textContent = `Welcome, ${firstName} 👋`;
+
+    document.getElementById("dash-stats").innerHTML = `
+      <div class="card"><div style="font-size:12px;color:var(--muted);text-transform:uppercase;font-weight:600">Total Sessions</div><div style="font-family:'Space Grotesk';font-size:32px;font-weight:700;margin-top:6px">${d.total_sessions}</div></div>
+      <div class="card"><div style="font-size:12px;color:var(--muted);text-transform:uppercase;font-weight:600">Average Score</div><div style="font-family:'Space Grotesk';font-size:32px;font-weight:700;margin-top:6px;color:var(--amber)">${d.average_score}<span style="font-size:16px;color:var(--muted)">/10</span></div></div>
+      <div class="card"><div style="font-size:12px;color:var(--muted);text-transform:uppercase;font-weight:600">Strongest Area</div><div style="font-family:'Space Grotesk';font-size:20px;font-weight:700;margin-top:6px;color:var(--teal);text-transform:capitalize">${d.strongest_topic || "—"}</div></div>
+    `;
+
+    const topicsEl = document.getElementById("dash-topics");
+    const entries = Object.entries(d.topic_progress || {});
+    topicsEl.innerHTML = entries.length ? entries.map(([topic,score])=>`
+      <div style="display:flex;align-items:center;gap:10px;margin:10px 0;">
+        <div style="width:130px;font-size:13px;color:var(--muted);text-transform:capitalize">${topic}</div>
+        <div style="flex:1;height:8px;background:var(--surface-2);border-radius:6px;overflow:hidden">
+          <div style="height:100%;border-radius:6px;background:linear-gradient(90deg,var(--amber),var(--teal));width:${score*10}%"></div>
+        </div>
+        <div style="width:40px;text-align:right;font-size:12px;color:var(--muted);font-weight:600">${score}/10</div>
+      </div>
+    `).join("") : `<p class="hint">Complete an interview session to populate your topic mastery.</p>`;
+
+    const recentEl = document.getElementById("dash-recent");
+    recentEl.innerHTML = (d.recent_sessions||[]).length ? d.recent_sessions.map(s=>`
+      <div style="display:flex;justify-content:space-between;align-items:center;padding:8px 0;border-bottom:1px solid var(--border);font-size:13px;">
+        <div>
+          <b>${s.role}</b> <span style="color:var(--muted)">· ${s.mode === 'technical' ? '💻 Coding' : '🗣️ HR'}</span>
+        </div>
+        <span class="badge ${s.score>=7?'green':s.score>=4?'amber':'red'}">${s.score}/10</span>
+      </div>
+    `).join("") : `<p class="hint">No completed sessions yet.</p>`;
+  } catch(e){}
+}
+
+async function loadHistory(){
+  const res = await authedFetch("/api/dashboard");
+  const d = await res.json();
+  const tbody = document.querySelector("#history-table tbody");
+  tbody.innerHTML = (d.recent_sessions||[]).length ? d.recent_sessions.map(s=>`
+    <tr>
+      <td>${s.date}</td>
+      <td><b>${s.role}</b></td>
+      <td>${s.company || 'General'}</td>
+      <td><span class="badge ${s.mode==='technical'?'amber':'green'}">${s.mode==='technical'?'💻 Coding':'🗣️ HR'}</span></td>
+      <td><span class="badge ${s.score>=7?'green':s.score>=4?'amber':'red'}">${s.score}/10</span></td>
+    </tr>
+  `).join("") : `<tr><td colspan="5" class="hint">No completed sessions yet.</td></tr>`;
+}
+
+// ---------------- Mode Selection ----------------
+function selectInterviewMode(mode){
+  selectedInterviewMode = mode;
+  document.getElementById("mode-card-hr").classList.toggle("selected", mode==="hr");
+  document.getElementById("mode-card-tech").classList.toggle("selected", mode==="technical");
+}
+
+async function previewResumeUpload(input){
+  if(!input.files.length) return;
+  const formData = new FormData();
+  formData.append("file", input.files[0]);
+  const previewBox = document.getElementById("setup-resume-preview");
+  previewBox.style.display = "block";
+  const fname = (input.files[0].name || "").toLowerCase();
+  const isMedia = /\.(mp3|wav|m4a|aac|ogg|oga|flac|opus|wma|mp4|mov|mkv|webm|avi|m4v|wmv)$/.test(fname) || /^(audio|video)\//.test(input.files[0].type || "");
+  const isImage = /\.(png|jpe?g|webp|bmp|tiff?)$/.test(fname) || /^image\//.test(input.files[0].type || "");
+  previewBox.innerHTML = isMedia
+    ? `Listening to your recording and transcribing it… (the first time can take a few minutes while the speech model loads)`
+    : isImage
+      ? `Reading the text in your image (OCR)… then analyzing your details`
+      : `Analyzing resume details… (with a local AI model this can take up to a minute)`;
+
+  try {
+    const res = await authedFetch("/api/resume/upload", {method:"POST", body:formData});
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.detail || "Could not read this file.");
+    currentResumePreview = data;
+    const sourceLabel = ({"pdf-text":"PDF","pdf-ocr":"Scanned PDF (OCR)","docx":"Word document","text":"Text file","image-ocr":"Image (OCR)"})[data.source_type]
+      || ((data.source_type||"").startsWith("audio") ? "Audio (speech-to-text)" : (data.source_type||"").startsWith("video") ? "Video (speech-to-text)" : "File");
+    document.getElementById("resume-status-badge").textContent = "Extracted";
+    document.getElementById("resume-status-badge").className = "badge green";
+
+    const skillsBadges = (data.skills||[]).slice(0, 8).map(s=>`<span class="badge green">${s}</span>`).join(" ");
+    previewBox.innerHTML = `
+      <div style="font-weight:600;color:var(--text);margin-bottom:4px">Recognized: ${_techEscapeHtml(data.candidate_name || 'Candidate')} <span class="badge" style="margin-left:6px;">${sourceLabel}</span></div>
+      ${(data.extraction_notes||[]).map(n=>`<div style="margin-top:4px;color:var(--muted);">ℹ ${_techEscapeHtml(n)}</div>`).join("")}
+      <div style="margin-top:6px;"><b>Detected Skills:</b> ${skillsBadges || 'General'}</div>
+      ${(data.education||[]).length ? `<div style="margin-top:6px;"><b>Education:</b> ${(data.education||[]).map(e=>[e.degree,e.institution,e.year].filter(Boolean).join(", ")).map(_techEscapeHtml).join(" · ")}</div>` : ""}
+      ${(data.experience||[]).length ? `<div style="margin-top:6px;"><b>Experience:</b> ${(data.experience||[]).map(x=>[x.role,x.company,x.duration].filter(Boolean).join(", ")).map(_techEscapeHtml).join(" · ")}</div>` : ""}
+      ${(data.extracted_projects||[]).length ? `<div style="margin-top:6px;"><b>Projects:</b> ${(data.extracted_projects||[]).map(p=>_techEscapeHtml(p.title)).join(" · ")}</div>` : ""}
+      ${(/^(audio|video|image)/.test(data.source_type||"")) && data.text_preview ? `<details style="margin-top:8px;"><summary style="cursor:pointer;">${/^image/.test(data.source_type)?"What we read from the image":"What we heard"} (check it is correct)</summary><div style="margin-top:6px;white-space:pre-wrap;color:var(--muted);">${_techEscapeHtml(data.text_preview)}</div></details>` : ""}
+    `;
+  } catch(e){
+    previewBox.innerHTML = `<span style="color:var(--red)">Could not parse resume: ${e.message}</span>`;
+  }
+}
+
+// ---------------- Start Configured Interview ----------------
+async function startConfiguredInterview(){
+  const role = document.getElementById("setup-role").value;
+  const role_type = document.getElementById("setup-role-category").value;
+  const company = document.getElementById("setup-company").value || "General";
+  const difficulty = document.getElementById("setup-difficulty").value;
+  const num_questions = parseInt(document.getElementById("setup-num").value);
+  const mode = selectedInterviewMode;
+
+  const res = await authedFetch("/api/interview/start", {
+    method:"POST", headers:{"Content-Type":"application/json"},
+    body: JSON.stringify({role, role_type, company, difficulty, num_questions, mode, use_resume: true})
+  });
+  const session = await res.json();
+  if(!res.ok){ alert(session.detail || "Could not start interview."); return; }
+
+  currentSession = session;
+  currentQIndex = 0;
+
+  if(mode === "technical"){
+    switchView("interview-tech");
+    renderTechQuestion();
+  } else {
+    switchView("interview-hr");
+    renderHrQuestion();
+  }
+}
+
+// ---------------- HR Interview Flow (AI Voice & Live Speech Dialogue) ----------------
+function renderHrQuestion(){
+  const q = currentSession.questions[currentQIndex];
+  document.getElementById("hr-title").textContent = `${currentSession.role} — HR Round`;
+  document.getElementById("hr-meta").textContent = `${currentSession.company} · ${currentSession.difficulty.toUpperCase()} difficulty`;
+  document.getElementById("hr-progress-pill").textContent = `Question ${currentQIndex+1} of ${currentSession.num_questions || currentSession.questions.length}`;
+  document.getElementById("hr-topic").textContent = q.topic;
+  document.getElementById("hr-question-text").textContent = q.text;
+
+  document.getElementById("hr-answer-input").value = "";
+  document.getElementById("hr-answer-input").disabled = false;
+  document.getElementById("hr-submit-btn").disabled = false;
+  document.getElementById("hr-submit-btn").style.display = "inline-flex";
+  document.getElementById("hr-feedback-box").style.display = "none";
+  document.getElementById("hr-next-btn").style.display = "none";
+  document.getElementById("hr-finish-btn").style.display = "none";
+
+  // Automatically narrate question aloud
+  speakHrQuestionAloud(q.text);
+}
+
+function speakHrQuestionAloud(text){
+  if(recognition && isRecording){
+    try{ recognition.stop(); }catch(e){}
+    isRecording = false;
+  }
+
+  const avatar = document.getElementById("hr-ai-avatar");
+  const badge = document.getElementById("hr-ai-status-badge");
+  if(avatar) avatar.classList.add("speaking");
+  if(badge){
+    badge.textContent = "🔊 AI Speaking...";
+    badge.className = "badge amber";
+  }
+
+  if(!("speechSynthesis" in window)){
+    if(avatar) avatar.classList.remove("speaking");
+    if(badge){
+      badge.textContent = "Ready for Response";
+      badge.className = "badge green";
+    }
+    startHrSpeechRecognition();
+    return;
+  }
+
+  window.speechSynthesis.cancel();
+  const utter = new SpeechSynthesisUtterance(text);
+  utter.rate = 1.0;
+  utter.pitch = 1.0;
+
+  utter.onend = () => {
+    if(avatar) avatar.classList.remove("speaking");
+    if(badge){
+      badge.textContent = "Listening to Candidate...";
+      badge.className = "badge green";
+    }
+    // Auto-listen after AI asks question
+    startHrSpeechRecognition();
+  };
+
+  utter.onerror = () => {
+    if(avatar) avatar.classList.remove("speaking");
+    if(badge){
+      badge.textContent = "Ready for Response";
+      badge.className = "badge green";
+    }
+    startHrSpeechRecognition();
+  };
+
+  window.speechSynthesis.speak(utter);
+}
+
+function replayHrQuestion(){
+  const q = currentSession.questions[currentQIndex];
+  if(q){
+    speakHrQuestionAloud(q.text);
+  }
+}
+
+function startHrSpeechRecognition(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR) return;
+  if(isRecording) return;
+
+  try {
+    recognition = new SR();
+    recognition.lang = "en-US";
+    recognition.continuous = true;
+    recognition.interimResults = true;
+
+    recognition.onstart = () => {
+      isRecording = true;
+      const btn = document.getElementById("hr-speech-btn");
+      if(btn){
+        btn.textContent = "⏹️ Done Speaking";
+        btn.classList.add("mic-live-pulse");
+      }
+      const indicator = document.getElementById("hr-speech-live-indicator");
+      if(indicator) indicator.style.display = "flex";
+    };
+
+    recognition.onresult = (e) => {
+      let finalTranscript = "";
+      let interimTranscript = "";
+      for (let i = 0; i < e.results.length; ++i) {
+        if (e.results[i].isFinal) {
+          finalTranscript += e.results[i][0].transcript + " ";
+        } else {
+          interimTranscript += e.results[i][0].transcript;
+        }
+      }
+      const fullText = (finalTranscript + interimTranscript).trim();
+      if(fullText){
+        document.getElementById("hr-answer-input").value = fullText;
+      }
+    };
+
+    recognition.onerror = () => {
+      isRecording = false;
+      const btn = document.getElementById("hr-speech-btn");
+      if(btn){
+        btn.textContent = "🎙️ Speak Answer";
+        btn.classList.remove("mic-live-pulse");
+      }
+      const indicator = document.getElementById("hr-speech-live-indicator");
+      if(indicator) indicator.style.display = "none";
+    };
+
+    recognition.onend = () => {
+      isRecording = false;
+      const btn = document.getElementById("hr-speech-btn");
+      if(btn){
+        btn.textContent = "🎙️ Speak Answer";
+        btn.classList.remove("mic-live-pulse");
+      }
+      const indicator = document.getElementById("hr-speech-live-indicator");
+      if(indicator) indicator.style.display = "none";
+    };
+
+    recognition.start();
+  } catch(e){}
+}
+
+function toggleHrSpeech(){
+  const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
+  if(!SR){ alert("Speech recognition is not supported in this browser. Please use Chrome or Edge."); return; }
+
+  if(isRecording){
+    if(recognition){ try{ recognition.stop(); }catch(e){} }
+    isRecording = false;
+    const btn = document.getElementById("hr-speech-btn");
+    if(btn){
+      btn.textContent = "🎙️ Speak Answer";
+      btn.classList.remove("mic-live-pulse");
+    }
+    const indicator = document.getElementById("hr-speech-live-indicator");
+    if(indicator) indicator.style.display = "none";
+  } else {
+    startHrSpeechRecognition();
+  }
+}
+
+function clearHrDialogue(){
+  document.getElementById("hr-answer-input").value = "";
+}
+
+async function submitHrAnswer(){
+  if(recognition && isRecording){
+    try{ recognition.stop(); }catch(e){}
+    isRecording = false;
+  }
+  window.speechSynthesis && window.speechSynthesis.cancel();
+
+  const answer_text = document.getElementById("hr-answer-input").value.trim();
+  const q = currentSession.questions[currentQIndex];
+  const btn = document.getElementById("hr-submit-btn");
+  btn.disabled = true; btn.innerHTML = `<span class="spinner"></span> Evaluating…`;
+
+  try {
+    const res = await authedFetch("/api/interview/answer", {
+      method:"POST", headers:{"Content-Type":"application/json"},
+      body: JSON.stringify({question_id: q.id, answer_text})
+    });
+    const fb = await res.json();
+    btn.style.display = "none";
+
+    const fbBox = document.getElementById("hr-feedback-box");
+    fbBox.style.display = "block";
+    document.getElementById("hr-fb-score").textContent = `${fb.score}/10`;
+    document.getElementById("hr-fb-text").textContent = fb.feedback;
+    document.getElementById("hr-fb-strengths").textContent = fb.strengths;
+    document.getElementById("hr-fb-tip").textContent = fb.improvement_tip;
+
+    document.getElementById("hr-answer-input").disabled = true;
+
+    const totalPlanned = currentSession.num_questions || currentSession.questions.length;
+    const isLast = (currentQIndex + 1) >= totalPlanned;
+    if(isLast){
+      document.getElementById("hr-finish-btn").style.display = "block";
+    } else {
+      document.getElementById("hr-next-btn").style.display = "block";
+      // The AI interviewer decides the next question based on THIS answer. Start generating it now,
+      // in the background, so it is usually ready by the time the candidate clicks "Next".
+      hrNextPromise = fetchNextHrQuestion();
+    }
+  } catch(e){
+    alert("Error evaluating answer: " + e.message);
+    btn.disabled = false;
+    btn.textContent = "🚀 Submit Response";
+  }
+}
+
+let hrNextPromise = null;
+
+async function fetchNextHrQuestion(){
+  try {
+    const res = await authedFetch(`/api/interview/${currentSession.id}/next`, {method:"POST"});
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.detail || "Could not get the next question.");
+    return data;
+  } catch(e){
+    return {error: e.message};
+  }
+}
+
+async function nextHrQuestion(){
+  const btn = document.getElementById("hr-next-btn");
+  const originalLabel = btn.innerHTML;
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner"></span> Interviewer is preparing the next question…`;
+
+  let data = await (hrNextPromise || fetchNextHrQuestion());
+  hrNextPromise = null;
+  if(data.error){                       // one automatic retry (e.g. the model was still loading)
+    data = await fetchNextHrQuestion();
+  }
+  btn.disabled = false;
+  btn.innerHTML = originalLabel;
+
+  if(data.error){ alert("Could not load the next question: " + data.error); return; }
+  if(!data.question){                   // interview finished early
+    document.getElementById("hr-next-btn").style.display = "none";
+    document.getElementById("hr-finish-btn").style.display = "block";
+    return;
+  }
+  currentSession.questions.push(data.question);
+  currentQIndex = currentSession.questions.length - 1;
+  renderHrQuestion();
+}
+
+
+// ============================================================
+// TECHNICAL MODE ONLY — all functions below are called
+// exclusively from #view-interview-tech elements and do not
+// affect HR mode, Career Path, or any other workflow.
+// ============================================================
+
+// --- Shared rendering helpers (Technical Mode only) ---
+
+function _techEscapeHtml(s) {
+  return String(s||"").replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/>/g,"&gt;");
+}
+
+function renderTechTestGrid(containerId, details) {
+  // details = array of {passed, note, case/test, expected, actual}
+  if (!details || !details.length) return;
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  el.innerHTML = details.map(d => {
+    const passed = d.passed === true;
+    const label  = d.test || `Test Case ${d.case}`;
+    const note   = _techEscapeHtml(d.note || (passed ? "Correct output." : "Wrong answer."));
+    return `<div class="tech-tc-row ${passed ? 'pass' : 'fail'}">
+      <span class="tech-tc-icon">${passed ? '✅' : '❌'}</span>
+      <span class="tech-tc-label">${_techEscapeHtml(label)}</span>
+      <span class="tech-tc-note">${note}</span>
+    </div>`;
+  }).join("");
+}
+
+function renderTechIssues(containerId, issues) {
+  // issues = array of {description, line_number, severity, recommendation}
+  const el = document.getElementById(containerId);
+  if (!el) return;
+  if (!issues || !issues.length) { el.innerHTML = ""; return; }
+  el.innerHTML = issues.map(iss => {
+    const sev = ["critical","warning","info"].includes(iss.severity) ? iss.severity : "info";
+    const ln  = iss.line_number ? `<div class="tech-issue-ln">Line ${iss.line_number}</div>` : "";
+    const rec = iss.recommendation
+      ? `<div class="tech-issue-rec">💡 ${_techEscapeHtml(iss.recommendation)}</div>` : "";
+    return `<div class="tech-issue-row ${sev}">
+      <span class="tech-issue-sev ${sev}">${sev}</span>
+      <div class="tech-issue-body">
+        <div class="tech-issue-desc">${_techEscapeHtml(iss.description)}</div>
+        ${ln}${rec}
+      </div>
+    </div>`;
+  }).join("");
+}
+
+// --- Language change: update mode indicator ---
+
+function onTechLangChange() {
+  changeCodingLanguage();          // load template
+  _updateTechModeIndicator();
+  // Hide stale dry-run results when language switches
+  document.getElementById("tech-dryrun-panel").style.display = "none";
+}
+
+function changeCodingLanguage() {
+  const lang = document.getElementById("tech-lang-select").value;
+  const q = currentSession.questions[currentQIndex];
+  const templates = (q.problem_details && q.problem_details.starter_templates) || {};
+  const template = templates[lang] || `// Write your ${lang} solution here\n`;
+  document.getElementById("tech-code-editor").value = template;
+}
+
+function _updateTechModeIndicator() {
+  const lang = document.getElementById("tech-lang-select").value;
+  const ind  = document.getElementById("tech-mode-indicator");
+  const lbl  = document.getElementById("tech-mode-label");
+  if (!ind || !lbl) return;
+  if (lang === "python") {
+    ind.className = "tech-mode-indicator mode-exec";
+    lbl.textContent = "🟢 Python — Real Execution + AI Analysis";
+  } else {
+    ind.className = "tech-mode-indicator mode-static";
+    lbl.textContent = `🟡 ${lang.toUpperCase()} — AI Static Analysis only (no execution)`;
+  }
+}
+
+// --- Render question ---
+
+function renderTechQuestion() {
+  const q = currentSession.questions[currentQIndex];
+  onTechQuestionChanged(q);
+  const details = q.problem_details || {
+    title: q.text, topic: q.topic, difficulty: q.difficulty,
+    description: "Write an optimal algorithmic solution for this problem.",
+    examples: [], constraints: [],
+    hints: ["Consider time and space complexity."],
+    starter_templates: {"python": "def solution():\n    pass\n"}
+  };
+
+  document.getElementById("tech-title").textContent = `Technical Coding Challenge`;
+  document.getElementById("tech-meta").textContent = `${currentSession.role} · ${currentSession.difficulty.toUpperCase()} difficulty`;
+  document.getElementById("tech-progress-pill").textContent = `Challenge ${currentQIndex+1} of ${currentSession.questions.length}`;
+
+  document.getElementById("tech-diff-tag").textContent = details.difficulty.toUpperCase();
+  document.getElementById("tech-diff-tag").className = `problem-tag ${details.difficulty}`;
+  document.getElementById("tech-topic-tag").textContent = details.topic;
+  document.getElementById("tech-problem-title").textContent = details.title;
+  document.getElementById("tech-problem-desc").innerHTML = details.description.replace(/\n/g, "<br/>");
+
+  const exContainer = document.getElementById("tech-examples-container");
+  exContainer.innerHTML = (details.examples||[]).map((ex, i)=>`
+    <div class="example-box">
+      <div class="example-title">Example ${i+1}:</div>
+      <div><b>Input:</b> <code>${ex.input}</code></div>
+      <div><b>Output:</b> <code>${ex.output}</code></div>
+      ${ex.explanation ? `<div><b>Explanation:</b> ${ex.explanation}</div>` : ''}
+    </div>
+  `).join("") || `<div class="example-box"><div class="example-title">Example 1:</div><div>Standard algorithmic input/output format.</div></div>`;
+
+  const constrList = document.getElementById("tech-constraints-list");
+  constrList.innerHTML = (details.constraints||[]).map(c=>`<li><code>${c}</code></li>`).join("") || `<li>Standard constraints apply.</li>`;
+
+  document.getElementById("tech-hint-text").textContent = (details.hints && details.hints[0]) || "Optimize for time and space efficiency.";
+
+  // Reset to default language & load template
+  changeCodingLanguage();
+  _updateTechModeIndicator();
+
+  // Reset panels
+  document.getElementById("tech-evaluation-panel").style.display = "none";
+  document.getElementById("tech-dryrun-panel").style.display = "none";
+  document.getElementById("tech-submit-btn").style.display = "inline-flex";
+  document.getElementById("tech-submit-btn").disabled = false;
+  document.getElementById("tech-submit-btn").innerHTML = "🚀 Submit Code";
+  document.getElementById("tech-run-btn").disabled = false;
+  document.getElementById("tech-run-btn").innerHTML = "▶ Test Solution";
+  document.getElementById("tech-next-btn").style.display = "none";
+  document.getElementById("tech-finish-btn").style.display = "none";
+}
+
+// --- Dry-run collapse toggle ---
+
+function toggleDryrunPanel() {
+  const inner = document.getElementById("tech-dryrun-inner");
+  const icon  = document.getElementById("tech-dryrun-toggle-icon");
+  if (!inner) return;
+  const collapsed = inner.style.display === "none";
+  inner.style.display = collapsed ? "" : "none";
+  if (icon) icon.textContent = collapsed ? "▲ collapse" : "▼ expand";
+}
+
+// --- "▶ Test Solution" — calls /api/interview/analyze-code ---
+
+async function runTechDryRun() {
+  const code = document.getElementById("tech-code-editor").value;
+  const lang = document.getElementById("tech-lang-select").value;
+  const q    = currentSession.questions[currentQIndex];
+  const btn  = document.getElementById("tech-run-btn");
+
+  if (!code.trim()) { alert("Please write some code before testing."); return; }
+
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner"></span> Analysing…`;
+
+  // Show & reset the dry-run panel
+  const panel = document.getElementById("tech-dryrun-panel");
+  panel.style.display = "block";
+  document.getElementById("tech-dryrun-inner").style.display = "";
+  document.getElementById("tech-dryrun-toggle-icon").textContent = "▲ collapse";
+  document.getElementById("tech-dryrun-exec").style.display       = "none";
+  document.getElementById("tech-dryrun-static-note").style.display = "none";
+  document.getElementById("tech-dryrun-ai").style.display          = "none";
+  document.getElementById("tech-dryrun-issues-wrap").style.display = "none";
+  document.getElementById("tech-dryrun-empty").style.display       = "block";
+  document.getElementById("tech-dryrun-empty").textContent         = "Running analysis…";
+
+  try {
+    const res = await authedFetch("/api/interview/analyze-code", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ question_id: q.id, code_submission: code, code_language: lang })
+    });
+    const data = await res.json();
+
+    // Validate top-level shape before using
+    if (!res.ok || typeof data !== "object") throw new Error("Invalid response from server.");
+
+    let hasContent = false;
+    document.getElementById("tech-dryrun-empty").style.display = "none";
+
+    // 1. Execution results (Python only)
+    const exec = data.execution_result;
+    if (exec && typeof exec === "object" && Array.isArray(exec.details) && exec.details.length) {
+      hasContent = true;
+      document.getElementById("tech-dryrun-exec").style.display = "";
+      renderTechTestGrid("tech-dryrun-tc-grid", exec.details);
+      const all = exec.all_passed;
+      document.getElementById("tech-dryrun-exec-summary").textContent =
+        all ? `✅ All ${exec.total} test case(s) passed.`
+            : `❌ ${exec.passed}/${exec.total} test case(s) passed.`;
+    }
+
+    // 2. Static analysis note for non-Python
+    if (lang !== "python") {
+      hasContent = true;
+      document.getElementById("tech-dryrun-static-note").style.display = "";
+    }
+
+    // 3. AI analysis fields
+    const hasAi = data.correctness_analysis || data.time_complexity || data.strengths;
+    if (hasAi) {
+      hasContent = true;
+      document.getElementById("tech-dryrun-ai").style.display = "";
+      document.getElementById("tech-dryrun-time").textContent =
+        data.time_complexity ? `⏱ ${data.time_complexity}` : "";
+      document.getElementById("tech-dryrun-space").textContent =
+        data.space_complexity ? `💾 ${data.space_complexity}` : "";
+      document.getElementById("tech-dryrun-correctness").textContent = data.correctness_analysis || "";
+      document.getElementById("tech-dryrun-strengths").textContent =
+        data.strengths ? `✓ ${data.strengths}` : "";
+      document.getElementById("tech-dryrun-tip").textContent =
+        data.improvement_tip ? `💡 ${data.improvement_tip}` : "";
+    }
+
+    // 4. Issues (validated array of objects)
+    const issues = Array.isArray(data.issues) ? data.issues.filter(i => i && i.description) : [];
+    if (issues.length) {
+      hasContent = true;
+      document.getElementById("tech-dryrun-issues-wrap").style.display = "";
+      renderTechIssues("tech-dryrun-issues", issues);
+    }
+
+    if (!hasContent) {
+      document.getElementById("tech-dryrun-empty").style.display = "block";
+      document.getElementById("tech-dryrun-empty").textContent = "No analysis available. Make sure the AI provider is configured.";
+    }
+
+  } catch(e) {
+    document.getElementById("tech-dryrun-empty").style.display = "block";
+    document.getElementById("tech-dryrun-empty").textContent = `Analysis error: ${e.message}`;
+  } finally {
+    btn.disabled = false;
+    btn.innerHTML = "▶ Test Solution";
+  }
+}
+
+// --- "🚀 Submit Code" — calls /api/interview/answer and renders structured evaluation ---
+
+async function submitTechCode() {
+  const code = document.getElementById("tech-code-editor").value;
+  const lang = document.getElementById("tech-lang-select").value;
+  const q    = currentSession.questions[currentQIndex];
+  const btn  = document.getElementById("tech-submit-btn");
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner"></span> Evaluating…`;
+
+  try {
+    const res = await authedFetch("/api/interview/answer", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({ question_id: q.id, code_submission: code, code_language: lang })
+    });
+    const fb = await res.json();
+    if (!res.ok) throw new Error(fb.detail || "Evaluation failed.");
+    btn.style.display = "none";
+
+    // ----- Render evaluation panel -----
+    const evalPanel = document.getElementById("tech-evaluation-panel");
+    evalPanel.style.display = "block";
+
+    // Score (execution-based for Python; issue-severity formula for non-Python)
+    document.getElementById("tech-eval-score").textContent = `${fb.score}/10`;
+
+    // Analysis mode badge
+    const modeBadge = document.getElementById("tech-eval-mode-badge");
+    if (modeBadge) {
+      const modeMap = {
+        "python_execution+ai": "✅ Real Execution + AI",
+        "python_execution":    "✅ Real Execution",
+        "ai_static":           "🟡 AI Static Analysis",
+        "rule_based":          "⚙️ Rule-based",
+      };
+      modeBadge.textContent = modeMap[fb.analysis_mode] || fb.analysis_mode || "";
+    }
+
+    // Complexity
+    document.getElementById("tech-eval-time").textContent  = fb.time_complexity  ? `⏱ ${fb.time_complexity}`  : "Time: N/A";
+    document.getElementById("tech-eval-space").textContent = fb.space_complexity ? `💾 ${fb.space_complexity}` : "Space: N/A";
+
+    // Test case grid (validated)
+    const tcResults = Array.isArray(fb.test_results) ? fb.test_results : [];
+    const tcWrap = document.getElementById("tech-eval-tc-wrap");
+    if (tcResults.length && tcWrap) {
+      tcWrap.style.display = "";
+      renderTechTestGrid("tech-eval-tc-grid", tcResults);
+    } else if (tcWrap) {
+      tcWrap.style.display = "none";
+    }
+
+    // Feedback & strengths
+    document.getElementById("tech-eval-feedback").textContent = fb.feedback || "";
+    document.getElementById("tech-eval-strengths").innerHTML  =
+      (fb.strengths ? `<b>Strengths:</b> ${_techEscapeHtml(fb.strengths)}` : "") +
+      (fb.improvement_tip ? ` · <b>Tip:</b> ${_techEscapeHtml(fb.improvement_tip)}` : "");
+
+    // Issues (validated)
+    const issues = Array.isArray(fb.issues) ? fb.issues.filter(i => i && i.description) : [];
+    const issuesWrap = document.getElementById("tech-eval-issues-wrap");
+    if (issues.length && issuesWrap) {
+      issuesWrap.style.display = "";
+      renderTechIssues("tech-eval-issues", issues);
+    } else if (issuesWrap) {
+      issuesWrap.style.display = "none";
+    }
+
+    const isLast = currentQIndex === currentSession.questions.length - 1;
+    if (isLast) {
+      document.getElementById("tech-finish-btn").style.display = "inline-flex";
+    } else {
+      document.getElementById("tech-next-btn").style.display = "inline-flex";
+    }
+  } catch(e) {
+    alert("Error evaluating code: " + e.message);
+    btn.disabled = false;
+    btn.innerHTML = "🚀 Submit Code";
+  }
+}
+
+function nextTechQuestion() {
+  currentQIndex++;
+  renderTechQuestion();
+}
+
+
+// ---------------- Complete Session & Results ----------------
+async function finishSession(){
+  const res = await authedFetch(`/api/interview/${currentSession.id}/complete`, {method:"POST"});
+  const result = await res.json();
+  renderResults(result);
+  switchView("results");
+}
+
+function renderResults(result){
+  const pct = Math.round(result.overall_score * 10);
+  const roadmapHtml = result.roadmap.length ? result.roadmap.map(r=>`
+    <div class="roadmap-phase-card">
+      <div class="roadmap-phase-header">
+        <span class="roadmap-phase-title">${r.topic}</span>
+        <span class="badge ${r.priority==='High'?'red':r.priority==='Medium'?'amber':'green'}">${r.priority} Priority</span>
+      </div>
+      <div style="font-size:12px;color:var(--muted);margin-bottom:6px">Average score: ${r.average_score}/10</div>
+      <ul style="margin:0;padding-left:18px;font-size:13px;color:var(--muted);">${r.resources.map(res=>`<li>${res}</li>`).join("")}</ul>
+    </div>
+  `).join("") : `<p class="hint">Outstanding session! No major weak topics identified.</p>`;
+
+  const answersHtml = result.answers.map((a,i)=>`
+    <div class="card" style="margin-bottom:12px;">
+      <div style="display:flex;justify-content:space-between;align-items:center;">
+        <span style="font-size:11px;color:var(--amber);font-weight:700;text-transform:uppercase">${a.topic}</span>
+        <span class="badge ${a.score>=7?'green':a.score>=4?'amber':'red'}">${a.score}/10</span>
+      </div>
+      <div style="font-weight:600;font-size:14.5px;margin:6px 0;">${i+1}. ${a.question}</div>
+      ${a.code_submission ? `
+        <div style="font-size:11.5px;color:var(--teal);margin-bottom:4px;"><b>Code Submission (${a.code_language||'code'}):</b></div>
+        <pre style="background:var(--surface-2);padding:10px;border-radius:6px;font-size:12px;overflow-x:auto;font-family:'JetBrains Mono'">${a.code_submission.substring(0,300)}...</pre>
+        ${a.time_complexity ? `<div style="font-size:12px;color:var(--muted)">Complexity: Time ${a.time_complexity} | Space ${a.space_complexity}</div>` : ''}
+      ` : `
+        <div style="font-size:13px;color:var(--muted);margin-bottom:6px">Your Response: ${a.answer || "(No response)"}</div>
+      `}
+      <div style="font-size:13px;color:var(--text);margin-top:8px;padding-top:8px;border-top:1px solid var(--border)"><b>AI Feedback:</b> ${a.feedback}</div>
+    </div>
+  `).join("");
+
+  document.getElementById("results-content").innerHTML = `
+    <div class="result-hero">
+      <div class="score-ring" style="--pct:${pct}"><div class="score-ring-inner">${result.overall_score}</div></div>
+      <div style="flex:1">
+        <div style="font-size:13px;color:var(--muted)">Overall Performance Score</div>
+        <div style="font-family:'Space Grotesk';font-size:22px;font-weight:700;margin:2px 0;">${
+          result.overall_score >= 7.5 ? "Ready for Job Interviews 🎉" : result.overall_score >= 5 ? "Good Progress — Target Your Weak Areas" : "Needs Focused Study & Practice"
+        }</div>
+        <div style="font-size:13px;color:var(--muted)">Candidate: ${result.candidate_name} · Role: ${result.role} (${result.mode.toUpperCase()})</div>
+      </div>
+      <button class="btn" onclick="downloadInterviewReportPdf(${result.session_id})">⬇ Download Performance Report (PDF)</button>
+    </div>
+
+    <div class="grid grid-split">
+      <div>
+        <h3 style="margin-top:0">Question &amp; Code Review</h3>
+        ${answersHtml}
+      </div>
+      <div>
+        <h3 style="margin-top:0">Personalized Study Roadmap</h3>
+        ${roadmapHtml}
+        <button class="btn block" style="margin-top:16px;" onclick="downloadInterviewReportPdf(${result.session_id})">⬇ Download Roadmap as PDF</button>
+        <button class="btn block secondary" style="margin-top:10px;" onclick="switchView('dashboard')">Back to Dashboard</button>
+      </div>
+    </div>
+  `;
+}
+
+async function downloadInterviewReportPdf(sessionId){
+  const res = await authedFetch(`/api/interview/${sessionId}/roadmap-pdf`);
+  if(!res.ok){ alert("Could not generate PDF report. Please try again."); return; }
+  const blob = await res.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `InterviewIQ_Report_Session_${sessionId}.pdf`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+}
+
+// ---------------- Career Path Recommendation ----------------
+function setupCareerPathView(){
+  // initialize career view
+}
+
+async function analyzeCareerPath(){
+  const target_role = document.getElementById("cp-target-role").value;
+  const fileInput = document.getElementById("cp-resume-file");
+  const btn = document.getElementById("cp-analyze-btn");
+
+  const formData = new FormData();
+  formData.append("target_role", target_role);
+  if(fileInput.files.length){
+    formData.append("file", fileInput.files[0]);
+  }
+
+  btn.disabled = true;
+  btn.innerHTML = `<span class="spinner"></span> ${fileInput.files.length ? "Reading your file & analyzing…" : "Analyzing Career Roadmap…"}`;
+
+  try {
+    const res = await authedFetch("/api/career-path/analyze", {
+      method:"POST",
+      body: formData
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.detail || "Could not analyze this file.");
+    latestCareerAnalysis = data;
+    renderCareerPathResults(data);
+  } catch(e){
+    alert("Error analyzing career path: " + e.message);
+  } finally {
+    btn.disabled = false;
+    btn.textContent = "🧭 Analyze Career Path & Generate Roadmap";
+  }
+}
+
+function renderCareerPathResults(data){
+  document.getElementById("cp-results-container").style.display = "block";
+  document.getElementById("cp-match-num").textContent = `${data.match_percentage}%`;
+  document.getElementById("cp-gauge").style.setProperty("--pct", data.match_percentage);
+  document.getElementById("cp-role-display").textContent = `${data.target_role} (${data.category})`;
+  document.getElementById("cp-readiness-display").textContent = `Candidate: ${data.candidate_name} · ${data.readiness}`;
+
+  // Matched Tags
+  document.getElementById("cp-matched-count").textContent = `${data.matched_skills.length} / ${data.total_required_skills_count}`;
+  document.getElementById("cp-matched-tags").innerHTML = data.matched_skills.length 
+    ? data.matched_skills.map(s=>`<span class="badge green">✓ ${s}</span>`).join("")
+    : `<p class="hint">No direct matched core skills detected from resume yet.</p>`;
+
+  // Missing Tags
+  document.getElementById("cp-missing-count").textContent = `${data.missing_skills.length} Gaps`;
+  document.getElementById("cp-missing-tags").innerHTML = data.missing_skills.length
+    ? data.missing_skills.map(s=>`<span class="badge amber">+ ${s}</span>`).join("")
+    : `<p class="hint">None! You meet all benchmark skills for this role.</p>`;
+
+  // Phases
+  const phasesList = document.getElementById("cp-phases-list");
+  phasesList.innerHTML = (data.roadmap_phases||[]).map(p=>`
+    <div class="roadmap-phase-card">
+      <div class="roadmap-phase-header">
+        <span class="roadmap-phase-title">${p.phase}</span>
+        <span class="roadmap-phase-duration">${p.duration}</span>
+      </div>
+      <div style="font-size:13.5px;color:var(--text);margin-bottom:8px"><b>Focus:</b> ${p.focus}</div>
+      <div style="font-size:12.5px;color:var(--muted);margin-bottom:4px;"><b>Curated Resources:</b></div>
+      <ul style="margin:0;padding-left:18px;font-size:13px;color:var(--muted);">${(p.resources||[]).map(r=>`<li>${r}</li>`).join("")}</ul>
+    </div>
+  `).join("");
+
+  // Projects
+  const projectsList = document.getElementById("cp-projects-list");
+  projectsList.innerHTML = (data.recommended_projects||[]).map((proj, idx)=>`
+    <div style="padding:12px;background:var(--surface-2);border-radius:10px;border:1px solid var(--border);margin-bottom:10px;font-size:13.5px;">
+      <b>Project ${idx+1}:</b> ${proj}
+    </div>
+  `).join("");
+
+  // Scroll to results
+  document.getElementById("cp-results-container").scrollIntoView({behavior:"smooth"});
+}
+
+async function downloadCareerRoadmapPdf(){
+  if(!latestCareerAnalysis){ alert("Please run the career analysis first."); return; }
+  const res = await authedFetch("/api/career-path/download-pdf", {
+    method:"POST",
+    headers:{"Content-Type":"application/json"},
+    body: JSON.stringify(latestCareerAnalysis)
+  });
+  if(!res.ok){ alert("Could not generate Career Roadmap PDF."); return; }
+  const blob = await res.blob();
+  const url = window.URL.createObjectURL(blob);
+  const a = document.createElement("a");
+  a.href = url;
+  a.download = `InterviewIQ_Career_Roadmap_${latestCareerAnalysis.target_role.replace(/ /g, '_')}.pdf`;
+  document.body.appendChild(a);
+  a.click();
+  a.remove();
+  window.URL.revokeObjectURL(url);
+}
+
+// ---------------- DSA Coach chat (technical round) ----------------
+const coachState = { open:false, busy:false, qid:null, histories:{} };
+
+function _coachEl(id){ return document.getElementById(id); }
+
+function updateCoachVisibility(view){
+  const inTech = (view === "interview-tech");
+  _coachEl("coach-fab").style.display = (inTech && !coachState.open) ? "inline-flex" : "none";
+  if(!inTech){ _coachEl("coach-panel").style.display = "none"; coachState.open = false; }
+}
+
+function toggleCoach(){
+  coachState.open = !coachState.open;
+  _coachEl("coach-panel").style.display = coachState.open ? "flex" : "none";
+  _coachEl("coach-fab").style.display = coachState.open ? "none" : "inline-flex";
+  if(coachState.open){ renderCoachMessages(); setTimeout(()=>_coachEl("coach-input").focus(), 60); }
+}
+
+// Called every time a new coding problem is shown: each problem keeps its own chat.
+function onTechQuestionChanged(q){
+  coachState.qid = q.id;
+  if(!coachState.histories[q.id]) coachState.histories[q.id] = [];
+  updateCoachVisibility("interview-tech");
+  if(coachState.open) renderCoachMessages();
+}
+
+function _coachFormat(text){
+  return _techEscapeHtml(text)
+    .replace(/\*\*(.+?)\*\*/g, "<b>$1</b>")
+    .replace(/`([^`\n]+)`/g, "<code>$1</code>")
+    .replace(/\n/g, "<br/>");
+}
+
+function _coachMeta(meta){
+  if(!meta) return "";
+  const bits = [];
+  if(meta.level && (meta.intent === "hint" || meta.intent === "code_request")) bits.push(`Hint level ${meta.level}/3`);
+  bits.push(meta.source === "ai" ? "🤖 AI mentor" : "📘 Built-in hint (start Ollama for fuller explanations)");
+  return `<div class="coach-meta">${bits.join(" · ")}</div>`;
+}
+
+function renderCoachMessages(){
+  const body = _coachEl("coach-body");
+  const hist = coachState.histories[coachState.qid] || [];
+  let html = `<div class="coach-msg bot"><div class="coach-bubble">Hi! I'm your DSA coach. I can <b>explain the question</b>, give <b>hints</b> and walk you through the <b>logic</b> — but I won't write the code for you. What would you like?</div></div>`;
+  html += hist.map(m => m.role === "user"
+    ? `<div class="coach-msg user"><div class="coach-bubble">${_coachFormat(m.content)}</div></div>`
+    : `<div class="coach-msg bot"><div class="coach-bubble">${_coachFormat(m.content)}</div>${_coachMeta(m.meta)}</div>`).join("");
+  if(coachState.busy){
+    html += `<div class="coach-msg bot"><div class="coach-bubble coach-typing"><span class="dot"></span><span class="dot"></span><span class="dot"></span><span class="coach-wait">a local AI model can take a few seconds…</span></div></div>`;
+  }
+  body.innerHTML = html;
+  body.scrollTop = body.scrollHeight;
+}
+
+function coachAutoGrow(el){
+  el.style.height = "auto";
+  el.style.height = Math.min(el.scrollHeight, 96) + "px";
+}
+
+function coachKey(e){
+  if(e.key === "Enter" && !e.shiftKey){ e.preventDefault(); sendCoachMessage(); }
+}
+
+async function sendCoachMessage(text){
+  if(coachState.busy || coachState.qid == null) return;
+  const input = _coachEl("coach-input");
+  const message = (text !== undefined ? text : input.value).trim();
+  if(!message) return;
+
+  const qid = coachState.qid;
+  const hist = coachState.histories[qid];
+  const history = hist.slice(-8).map(m => ({role: m.role, content: m.content}));   // the exchange BEFORE this message
+  hist.push({role: "user", content: message});
+  input.value = ""; coachAutoGrow(input);
+
+  coachState.busy = true;
+  _coachEl("coach-send").disabled = true;
+  document.querySelectorAll(".coach-chip").forEach(c => c.disabled = true);
+  renderCoachMessages();
+
+  try {
+    const res = await authedFetch("/api/interview/coach", {
+      method: "POST",
+      headers: {"Content-Type": "application/json"},
+      body: JSON.stringify({
+        question_id: qid, message, history,
+        code_submission: _coachEl("tech-code-editor").value,
+        code_language: _coachEl("tech-lang-select").value,
+      })
+    });
+    const data = await res.json();
+    if(!res.ok) throw new Error(data.detail || "The coach couldn't answer right now.");
+    hist.push({role: "assistant", content: data.reply, meta: {source: data.source, intent: data.intent, level: data.level}});
+  } catch(e){
+    hist.push({role: "assistant", content: "Sorry, I couldn't answer that: " + e.message, meta: null});
+  } finally {
+    coachState.busy = false;
+    _coachEl("coach-send").disabled = false;
+    document.querySelectorAll(".coach-chip").forEach(c => c.disabled = false);
+    if(coachState.qid === qid) renderCoachMessages();
+  }
+}
+
+// ---------------- App Boot ----------------
+(async function boot(){
+  // If the URL has ?verify=... or ?reset=..., handle that first (from an emailed link)
+  const handledAuthLink = await handleUrlAuthLinks();
+  if(handledAuthLink) return;
+
+  if(TOKEN){
+    authedFetch("/api/me").then(async res=>{
+      if(res.ok){ CURRENT_USER = await res.json(); enterApp(); }
+      else { logout(); }
+    }).catch(()=>logout());
+  }
+})();
+
+if ("serviceWorker" in navigator) {
+  navigator.serviceWorker.register("/sw.js").catch(()=>{});
+}
+</script>
+</body>
+</html>

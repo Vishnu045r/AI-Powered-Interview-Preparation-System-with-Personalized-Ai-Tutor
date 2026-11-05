@@ -1,0 +1,11 @@
+{
+  "name": "InterviewIQ - AI Interview & Career Intelligence",
+  "short_name": "InterviewIQ",
+  "start_url": "/",
+  "display": "standalone",
+  "background_color": "#0B1118",
+  "theme_color": "#0B1118",
+  "icons": [
+    { "src": "/icon.svg", "sizes": "any", "type": "image/svg+xml" }
+  ]
+}
